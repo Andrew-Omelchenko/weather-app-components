@@ -1,0 +1,112 @@
+@import "_base";
+
+* {
+	font-family: "Roboto", sans-serif;
+	font-stretch: ultra-condensed;
+	box-sizing: border-box;
+}
+
+.flex-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: center;
+	align-items: center;
+
+	&.center {
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+body {
+	background: $bg-color-main-body;
+}
+
+@media screen and (max-width: 320px) {
+	.flex-container {
+		width: 320px;
+	}
+}
+
+@media screen and (min-width: 321px) {
+	.flex-container {
+		width: 320px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+@include flex-settings;
+
+.temperature {
+	font-size: 42pt;
+}
+
+.add-temp {
+	font-size: 10pt;
+}
+
+.temp-min {
+	color: darkblue;
+}
+
+.temp-max {
+	color: crimson;
+}
+
+.location {
+	font-size: $font-size-location;
+	color: $fg-color-location;
+}
+
+.day {
+	font-weight: bold;
+}
+
+.icon {
+	width: 100%;
+}
+
+.humidity-icon {
+	width: 24px;
+	height: 24px;
+}
+
+.fa-star,
+.fa-history {
+	color: $fg-color-sign;
+}
+
+.fa-times-circle {
+	color: $fg-warning-color;
+}
+
+.btn {
+	font-size: 12pt;
+	border-radius: 5px;
+	border: 1px solid $border-color;
+	color: $fg-color-main-body;
+	background: $bg-color-main-body;
+	padding: 5px 8px 5px 8px;
+
+	&:hover {
+		opacity: 0.7;
+	}
+
+	&.btn-active {
+		opacity: 1;
+		transition: all .2s;
+	
+		&:hover,
+		&:focus {
+			transform: translate(-3px, -3px);
+			box-shadow: 4px 4px 10px rgba(0, 0, 0, .5);
+		}
+	
+		&:active {
+			transform: translate(-1px, -1px);
+			box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+		}
+	}
+}

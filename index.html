@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Weather App</title>
+  </head>
+  <body>
+    <header class="header">
+      <section class="flex-container moving-to-right">
+        <span class="loc-field">
+          <input class="btn wide" id="loc-field" type="text" placeholder="Enter location..." title="Enter location here">
+        </span>
+        <span class="base-units">
+          <select class="btn" id="base-units" title="Selects metric or imperial units" aria-labelledby="base-units">
+            <option value="metric">&deg;C, m/s</option>
+            <option value="imperial">&deg;F, mph</option>
+          </select>
+        </span>
+      </section>
+      <section class="flex-container moving-to-left">
+        <div class="favorites">
+          <i class="fa fa-star" aria-hidden="true"></i>
+          <span>
+            <input class="btn" id="favorites-field" type="text" list="favorites-lst" placeholder="Favorites..." title="List of favorites">
+            <datalist id="favorites-lst"></datalist>
+          </span>
+          <span>
+            <button class="btn btn-active" id="favorites-go-btn" title="Loads selected city data" aria-label="Search favorite location">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+          </span>
+          <span>
+            <button class="btn btn-active" id="clear-favorites-btn" title="Clears list of favorites" aria-label="Clear list of favorites">
+              <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
+        <div class="history">
+          <i class="fa fa-history" aria-hidden="true"></i>
+          <span>
+            <input class="btn" id="history-field" type="text" list="history-lst" placeholder="History..." title="History list">
+            <datalist id="history-lst"></datalist>
+          </span>
+          <span>
+            <button class="btn btn-active" id="history-go-btn" title="Loads selected city data" aria-label="Search history location">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+          </span>
+          <span>
+            <button class="btn btn-active" id="clear-history-btn" title="Clears history list" aria-label="Clear history list">
+              <i class="fa fa-times-circle" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
+      </section>
+    </header>
+    <main>
+      <section class="flex-container current-day showing-up" id="current-day"></section>
+      <section class="flex-container another-days showing-up" id="another-days"></section>
+    </main>
+    <script src="dist/bundle.js" type="module"></script>
+  </body>
+</html>
