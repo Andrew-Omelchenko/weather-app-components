@@ -68,8 +68,13 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// Base URL for icons
+const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
+/* harmony export (immutable) */ __webpack_exports__["b"] = ICON_BASE;
+
+
 // Weekday names array
-const dayOfWeek = [
+const DAY_OF_WEEK = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -78,7 +83,7 @@ const dayOfWeek = [
   "Friday",
   "Saturday"
 ];
-/* unused harmony export dayOfWeek */
+/* harmony export (immutable) */ __webpack_exports__["a"] = DAY_OF_WEEK;
 
 
 // number of days to forecast
@@ -88,7 +93,7 @@ const numOfDays = 7;
 
 // Value, that limits number of entries in history or favorites lists
 const limit = 30;
-/* harmony export (immutable) */ __webpack_exports__["a"] = limit;
+/* harmony export (immutable) */ __webpack_exports__["c"] = limit;
 
 
 // Unit systems
@@ -180,6 +185,8 @@ const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.g
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_services_storage_service_js__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_services_favorites_service_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_services_history_service_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__src_components_OtherDaysForecast__ = __webpack_require__(9);
+
 
 
 
@@ -189,7 +196,6 @@ const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.g
 
 class App {
   constructor(host) {
-
     this.state = {
       city: "Kiev,UA",
       todayForecast: null,
@@ -198,15 +204,17 @@ class App {
 
     this.host = host;
 
-    console.log(this.host);
-
-    const data = Object(__WEBPACK_IMPORTED_MODULE_2__src_utils_api__["a" /* getForecast */])(this.state.city, 7, "M");
-    console.log(data);
+    Object(__WEBPACK_IMPORTED_MODULE_2__src_utils_api__["a" /* getForecast */])(this.state.city, 7, "M").then(result => {
+      const data = result.data;
+      const firstDay = data.shift();
+      console.log(firstDay, data);
+      Object(__WEBPACK_IMPORTED_MODULE_6__src_components_OtherDaysForecast__["a" /* render */])(data);
+    });
   }
-
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (App);
+
 
 /***/ }),
 /* 4 */
@@ -469,7 +477,7 @@ class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__list_service_js__["a
       }
     }
     // check length limit
-    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["a" /* limit */]) {
+    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["c" /* limit */]) {
       this._data.pop();
     }
     // add item
@@ -529,7 +537,7 @@ class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__list_service_js__["a" 
       this._data = tmp;
     }
     // check length limit
-    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["a" /* limit */]) {
+    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["c" /* limit */]) {
       this._data.shift();
     }
     // add item
@@ -541,6 +549,39 @@ class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__list_service_js__["a" 
   }
 }
 /* unused harmony export HistoryService */
+
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config_js__ = __webpack_require__(0);
+
+
+const host = document.getElementById("other-days-forecast-container");
+
+const render = data => {
+  const items = data
+    .map(item => {
+      return `
+        <div>
+          <h3>${__WEBPACK_IMPORTED_MODULE_0__utils_config_js__["a" /* DAY_OF_WEEK */][new Date(item.datetime).getDay()]}</h3>
+          <img src="${__WEBPACK_IMPORTED_MODULE_0__utils_config_js__["b" /* ICON_BASE */]}${item.weather.icon}.png" alt="Icon">
+          <h4>Temp: ${item.weather.description}</h4>
+          <h4>${item.temp}</h4>
+        </div>
+    `;
+    })
+    .join("");
+
+  host.innerHTML = `
+    <div class='other-days-forecast'>
+      ${items}
+    </div>`;
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = render;
 
 
 

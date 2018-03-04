@@ -1,5 +1,8 @@
+// Base URL for icons
+export const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
+
 // Weekday names array
-export const dayOfWeek = [
+export const DAY_OF_WEEK = [
   "Sunday",
   "Monday",
   "Tuesday",
