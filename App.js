@@ -4,25 +4,28 @@ import { getForecast } from "./src/utils/api";
 import { StorageService } from "./src/services/storage_service.js";
 import { FavoritesService } from "./src/services/favorites_service.js";
 import { HistoryService } from "./src/services/history_service.js";
-import { render } from "./src/components/OtherDaysForecast";
+import { LocationSearch } from "./src/components/LocationSearch.js";
 
-class App {
+export class App {
   constructor(host) {
     this.state = {
-      city: "Kiev,UA",
-      todayForecast: null,
-      weekForecast: null
+      isValid: true
     };
+
+    // bindAll(this, 'handleSubmit');
 
     this.host = host;
 
-    getForecast(this.state.city, 7, "M").then(result => {
-      const data = result.data;
-      const firstDay = data.shift();
-      console.log(firstDay, data);
-      render(data);
-    });
+    this.locationSearch = new LocationSearch();
+  }
+
+  updateState(nextState) {
+    this.state = nextState;
+    this.render();
+  }
+
+  render() {
+    this.host.innerHTML = "";
+    this.host.appendChild(this.locationSearch.render());
   }
 }
-
-export default App;
