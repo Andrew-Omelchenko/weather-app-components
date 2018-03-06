@@ -13,27 +13,25 @@ const init = {
   credentials: "omit"
 };
 
-export const getForecast = (loc, days, units) => {
+const getForecast = (loc, days, units) => {
   return fetch(
     `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${days}${UNITS_MOD}${units}${LOC_MOD}${loc}`,
     init
   )
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error(response.status);
-      }
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error.message);
-      if (error.message == "Unexpected end of JSON input") {
-        alert("Requested location was not found. Try another one.");
-      } else {
-        alert("Error occured. Please try later.");
-      }
-    });
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error(response.status);
+  })
+  .catch(error => {
+    console.log(error.message);
+    if (error.message === "Unexpected end of JSON input") {
+      alert("Requested location was not found. Try another one.");
+    } else {
+      alert("Error occured. Please try later.");
+    }
+  });
 };
+
+export default getForecast;

@@ -1,14 +1,15 @@
-import * as config from "./src/utils/config.js";
-import * as helper from "./src/utils/helper.js";
-import { getForecast } from "./src/utils/api";
-import { StorageService } from "./src/services/storage_service.js";
-import { FavoritesService } from "./src/services/favorites_service.js";
-import { HistoryService } from "./src/services/history_service.js";
-import { LocationSearch } from "./src/components/LocationSearch.js";
+// import * as config from "./src/utils/config";
+import * as helper from "./src/utils/helper";
+// import { getForecast } from "./src/utils/api";
+// import { StorageService } from "./src/services/storage_service";
+// import { FavoritesService } from "./src/services/favorites_service";
+// import { HistoryService } from "./src/services/history_service";
+import LocationSearch from "./src/components/LocationSearch";
 
-export class App {
+class App {
   constructor(host) {
     this.state = {
+      city: helper.parseLocation(window.location.href) || "",
       isValid: true
     };
 
@@ -25,7 +26,13 @@ export class App {
   }
 
   render() {
+    const  { city } = this.state;
+
     this.host.innerHTML = "";
-    this.host.appendChild(this.locationSearch.render());
+    this.host.appendChild(this.locationSearch.update({ city }));
+
+    return this.host;
   }
 }
+
+export default App;

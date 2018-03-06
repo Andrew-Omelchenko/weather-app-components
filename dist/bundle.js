@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,51 +68,12 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// Base URL for icons
-const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
-/* unused harmony export ICON_BASE */
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(1);
 
 
-// Weekday names array
-const DAY_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-];
-/* unused harmony export DAY_OF_WEEK */
-
-
-// number of days to forecast
-const numOfDays = 7;
-/* unused harmony export numOfDays */
-
-
-// Value, that limits number of entries in history or favorites lists
-const limit = 30;
-/* harmony export (immutable) */ __webpack_exports__["a"] = limit;
-
-
-// Unit systems
-const unitSystems = {
-  metric: {
-    name: "metric",
-    code: "M",
-    temperatureUnit: "C",
-    velocityUnit: "m/s"
-  },
-  imperial: {
-    name: "imperial",
-    code: "I",
-    temperatureUnit: "F",
-    velocityUnit: "mph"
-  }
-};
-/* unused harmony export unitSystems */
-
+const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.getElementById("root"));
+app.render();
 
 
 /***/ }),
@@ -120,83 +81,20 @@ const unitSystems = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/** Class representing a list service. */
-class ListService {
-  /**
-   * Creates list service.
-   * @constructor
-   * @param {StorageService} storageSvc - StorageService object
-   * @param {string} name - name of the key in the local storage
-   */
-  constructor(storageSvc, name) {
-    this._storageService = storageSvc;
-    this._name = name;
-    this._data = this._storageService.read(this._name);
-    if (this._data == null) {
-      this._data = [];
-    }
-  }
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__ = __webpack_require__(3);
+// import * as config from "./src/utils/config";
 
-  /**
-   * Getter function for reading current data from the list
-   * @returns {[]} - current data
-   */
-  get data() {
-    console.log(`ListService. Getting ${this._name} data.`);
-    console.log(this._data);
-    return this._data;
-  }
-
-  /**
-   * Clears data in the list
-   */
-  clear() {
-    this._storageService.remove(this._name);
-    this._data = [];
-    console.log(`ListService. Clearing ${this._name} data.`);
-    console.log(this._data);
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = ListService;
-
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(3);
-
-
-const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* App */](document.getElementById("root"));
-app.render();
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_config_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_utils_helper_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_utils_api__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_services_storage_service_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_services_favorites_service_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_services_history_service_js__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__src_components_LocationSearch_js__ = __webpack_require__(9);
-
-
-
-
-
-
+// import { getForecast } from "./src/utils/api";
+// import { StorageService } from "./src/services/storage_service";
+// import { FavoritesService } from "./src/services/favorites_service";
+// import { HistoryService } from "./src/services/history_service";
 
 
 class App {
   constructor(host) {
     this.state = {
+      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* parseLocation */](window.location.href) || "",
       isValid: true
     };
 
@@ -204,7 +102,7 @@ class App {
 
     this.host = host;
 
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_6__src_components_LocationSearch_js__["a" /* LocationSearch */]();
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]();
   }
 
   updateState(nextState) {
@@ -213,21 +111,25 @@ class App {
   }
 
   render() {
+    const  { city } = this.state;
+
     this.host.innerHTML = "";
-    this.host.appendChild(this.locationSearch.render());
+    this.host.appendChild(this.locationSearch.update({ city }));
+
+    return this.host;
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = App;
 
+/* harmony default export */ __webpack_exports__["a"] = (App);
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export extractBase */
-/* unused harmony export parseLocation */
+/* harmony export (immutable) */ __webpack_exports__["a"] = parseLocation;
 /* unused harmony export toFahrenheit */
 /* unused harmony export toCelsius */
 /* unused harmony export toMph */
@@ -250,7 +152,7 @@ function extractBase(urlString) {
  * @returns {string} location
  */
 function parseLocation(urlString) {
-  let parsed = new URL(urlString);
+  const parsed = new URL(urlString);
   return parsed.searchParams.get("city");
 }
 
@@ -309,7 +211,7 @@ function clearSelect(selectId) {
  */
 function populateSelect(doc, selectId, data, direction) {
   let opt = null;
-  if (direction == "normal") {
+  if (direction === "normal") {
     for (let elem of data) {
       opt = doc.createElement("option");
       opt.value = elem;
@@ -331,8 +233,8 @@ function populateSelect(doc, selectId, data, direction) {
  * @param {HTMLElementObject} favListId - html element
  */
 function addFavoriteLocation(doc, controller, favListId) {
-  console.log("Inside add favorite listener");
-  let result = controller.addFavorite();
+  // console.log("Inside add favorite listener");
+  const result = controller.addFavorite();
   if (result) {
     clearSelect(favListId);
     populateSelect(
@@ -346,219 +248,7 @@ function addFavoriteLocation(doc, controller, favListId) {
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const BASE_URL = "https://api.weatherbit.io/v2.0/forecast/daily";
-const KEY_MOD = "?key=";
-const API_KEY = "91e53c3974b54ac9871fe08adfd31dd9";
-const DAYS_MOD = "&days=";
-const LOC_MOD = "&city=";
-const UNITS_MOD = "&units=";
-
-const init = {
-  method: "GET",
-  headers: new Headers(),
-  mode: "cors",
-  cache: "default",
-  credentials: "omit"
-};
-
-const getForecast = (loc, days, units) => {
-  return fetch(
-    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${days}${UNITS_MOD}${units}${LOC_MOD}${loc}`,
-    init
-  )
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error(response.status);
-      }
-    })
-    .then(data => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error.message);
-      if (error.message == "Unexpected end of JSON input") {
-        alert("Requested location was not found. Try another one.");
-      } else {
-        alert("Error occured. Please try later.");
-      }
-    });
-};
-/* unused harmony export getForecast */
-
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/** Class representing a storage service. */
-class StorageService {
-  /**
-   * Creates storage service.
-   * @constructor
-   * @param {Window} wnd - current Window object
-   */
-  constructor(wnd) {
-    this._wnd = wnd;
-  }
-
-  /**
-   * Writes object to the local storage
-   * @param {Object} obj - object to add
-   * @param {string} name - name of the key
-   */
-  write(obj, name) {
-    let serialized = JSON.stringify(obj);
-    this._wnd.localStorage.setItem(name, serialized);
-  }
-
-  /**
-   * Reads object from the local storage
-   * @param {string} name - name of the key
-   */
-  read(name) {
-    return JSON.parse(this._wnd.localStorage.getItem(name));
-  }
-
-  /**
-   * Removes object from the local storage
-   * @param {string} name - name of the key
-   */
-  remove(name) {
-    this._wnd.localStorage.removeItem(name);
-  }
-
-  /**
-   * Clears local storage
-   */
-  clear() {
-    this._wnd.localStorage.clear();
-  }
-}
-/* unused harmony export StorageService */
-
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__list_service_js__ = __webpack_require__(1);
-
-
-
-/** Class representing a favorites service. */
-class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__list_service_js__["a" /* ListService */] {
-  /**
-   * Creates favorites service.
-   * @constructor
-   * @param {StorageService} storageSvc - StorageService object
-   * @param {string} name - name of the key in the local storage
-   */
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
-  }
-
-  /**
-   * Adds item to the favorites list
-   * @param {string} item - item to add to the list
-   * @returns {boolean} true, if item was added, false - otherwise
-   */
-  add(item) {
-    // is there the same element?
-    for (let elem of this._data) {
-      if (elem == item) {
-        console.log("Item is already present.")
-        return false;
-      }
-    }
-    // check length limit
-    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["a" /* limit */]) {
-      this._data.pop();
-    }
-    // add item
-    this._data.push(item);
-    this._data.sort();
-    this._storageService.write(this._data, this._name);
-    console.log("Favorites service. Adding favorite.");
-    console.log(this._data);
-    return true;
-  }
-}
-/* unused harmony export FavoritesService */
-
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__list_service_js__ = __webpack_require__(1);
-
-
-
-/** Class representing a history service. */
-class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__list_service_js__["a" /* ListService */] {
-  /**
-   * Creates history service.
-   * @constructor
-   * @param {StorageService} storageSvc - StorageService object
-   * @param {string} name - name of the key in the local storage
-   */
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
-  }
-
-  /**
-   * Adds item to the history list
-   * @param {string} item - item to add to the list
-   * @returns {boolean} true, if item was added, false - otherwise
-   */
-  add(item) {
-    // check last
-    if (item == this._data[this._data.length - 1]) {
-      console.log("Such last entry already exists.");
-      return false;
-    }
-    // remove duplicates
-    if (this._data && this._data.length > 0) {
-      let tmp = [];
-      for (let elem of this._data) {
-        if (elem != item) {
-          tmp.push(elem);
-        }
-      }
-      this._data = tmp;
-    }
-    // check length limit
-    if (this._data.length == __WEBPACK_IMPORTED_MODULE_0__utils_config_js__["a" /* limit */]) {
-      this._data.shift();
-    }
-    // add item
-    this._data.push(item);
-    this._storageService.write(this._data, this._name);
-    console.log("History service. Adding history item.");
-    console.log(this._data);
-    return true;
-  }
-}
-/* unused harmony export HistoryService */
-
-
-
-/***/ }),
-/* 9 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -566,20 +256,28 @@ class LocationSearch {
   constructor() {
     this.state = {
       isValid: true
-    }
+    };
 
-    // bindAll(this, 'handleSubmit');
+    // bindAll(this, 'onSubmit');
 
     this.host = document.createElement("div");
     this.host.classList.add("location-search-container");
 
-    this.host.addEventListener("submit", this.handleSubmit);
+    this.host.addEventListener("submit", this.onSubmit);
   }
 
-  handleSubmit(ev) {
+  onBeforeUpdate(nextProps) {}
+
+  update(nextProps) {
+    this.onBeforeUpdate(nextProps);
+    this.props = nextProps;
+    return this.render();
+  }
+
+  onSubmit(ev) {
     ev.preventDefault();
 
-    const city = ev.target.elements.search.value.trim();
+    const city = ev.target.elements.city.value.trim();
 
     if (!city.length) {
       this.updateState({ isValid: false });
@@ -589,18 +287,22 @@ class LocationSearch {
   }
 
   render() {
+    const { isValid } = this.state;
+    const { city } = this.props;
+
     this.host.innerHTML = `
-        <form class="weather-form">
-          <input name="search" required class="search-weather">
-          <button class="weather-search-submit">Find</button>
+        <form class=${isValid ? "location-search" : "location-search -invalid"}>
+          <input required name="city" type="text" placeholder="City name" class="location-search-input" value="${city}">
+          <button class="location-search-submit">Find</button>
+          <button type="button" class="location-favorites">Add to favorites</button>
         </form>
     `;
 
     return this.host;
   }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = LocationSearch;
 
+/* harmony default export */ __webpack_exports__["a"] = (LocationSearch);
 
 
 /***/ })

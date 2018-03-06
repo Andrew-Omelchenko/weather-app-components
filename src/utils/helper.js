@@ -13,7 +13,7 @@ export function extractBase(urlString) {
  * @returns {string} location
  */
 export function parseLocation(urlString) {
-  let parsed = new URL(urlString);
+  const parsed = new URL(urlString);
   return parsed.searchParams.get("city");
 }
 
@@ -72,7 +72,7 @@ export function clearSelect(selectId) {
  */
 export function populateSelect(doc, selectId, data, direction) {
   let opt = null;
-  if (direction == "normal") {
+  if (direction === "normal") {
     for (let elem of data) {
       opt = doc.createElement("option");
       opt.value = elem;
@@ -94,8 +94,8 @@ export function populateSelect(doc, selectId, data, direction) {
  * @param {HTMLElementObject} favListId - html element
  */
 export function addFavoriteLocation(doc, controller, favListId) {
-  console.log("Inside add favorite listener");
-  let result = controller.addFavorite();
+  // console.log("Inside add favorite listener");
+  const result = controller.addFavorite();
   if (result) {
     clearSelect(favListId);
     populateSelect(
