@@ -1,12 +1,12 @@
 /** Class representing a storage service. */
-export class StorageService {
+class StorageService {
   /**
    * Creates storage service.
    * @constructor
    * @param {Window} wnd - current Window object
    */
   constructor(wnd) {
-    this._wnd = wnd;
+    this.wnd = wnd;
   }
 
   /**
@@ -15,8 +15,8 @@ export class StorageService {
    * @param {string} name - name of the key
    */
   write(obj, name) {
-    let serialized = JSON.stringify(obj);
-    this._wnd.localStorage.setItem(name, serialized);
+    const serialized = JSON.stringify(obj);
+    this.wnd.localStorage.setItem(name, serialized);
   }
 
   /**
@@ -24,7 +24,7 @@ export class StorageService {
    * @param {string} name - name of the key
    */
   read(name) {
-    return JSON.parse(this._wnd.localStorage.getItem(name));
+    return JSON.parse(this.wnd.localStorage.getItem(name));
   }
 
   /**
@@ -32,13 +32,15 @@ export class StorageService {
    * @param {string} name - name of the key
    */
   remove(name) {
-    this._wnd.localStorage.removeItem(name);
+    this.wnd.localStorage.removeItem(name);
   }
 
   /**
    * Clears local storage
    */
   clear() {
-    this._wnd.localStorage.clear();
+    this.wnd.localStorage.clear();
   }
 }
+
+export default StorageService;

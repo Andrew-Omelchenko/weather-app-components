@@ -1,9 +1,9 @@
 // import * as config from "./src/utils/config";
 import * as helper from "./src/utils/helper";
 // import { getForecast } from "./src/utils/api";
-// import { StorageService } from "./src/services/storage_service";
-// import { FavoritesService } from "./src/services/favorites_service";
-// import { HistoryService } from "./src/services/history_service";
+// import StorageService from "./src/services/StorageService";
+// import FavoritesService from "./src/services/FavoritesService";
+// import HistoryService from "./src/services/HistoryService";
 import LocationSearch from "./src/components/LocationSearch";
 
 class App {
