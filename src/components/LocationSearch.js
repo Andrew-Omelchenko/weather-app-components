@@ -1,15 +1,17 @@
+import * as helper from "../utils/helper";
+
 class LocationSearch {
   constructor() {
     this.state = {
       isValid: true
     };
 
-    // bindAll(this, 'onSubmit');
+    helper.bindAll(this, 'handleSubmit');
 
     this.host = document.createElement("div");
     this.host.classList.add("location-search-container");
 
-    this.host.addEventListener("submit", this.onSubmit);
+    this.host.addEventListener("submit", this.handleSubmit);
   }
 
   onBeforeUpdate(nextProps) {}
@@ -20,7 +22,7 @@ class LocationSearch {
     return this.render();
   }
 
-  onSubmit(ev) {
+  handleSubmit(ev) {
     ev.preventDefault();
 
     const city = ev.target.elements.city.value.trim();
@@ -28,7 +30,7 @@ class LocationSearch {
     if (!city.length) {
       this.updateState({ isValid: false });
     } else {
-      // this.props.onSubmit(city);
+      this.props.onSubmit(city);
     }
   }
 

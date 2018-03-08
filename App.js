@@ -13,7 +13,7 @@ class App {
       isValid: true
     };
 
-    // bindAll(this, 'handleSubmit');
+    helper.bindAll(this, 'onSearchSubmit');
 
     this.host = host;
 
@@ -25,11 +25,15 @@ class App {
     this.render();
   }
 
+  onSearchSubmit(city) {
+    this.updateState({ city });
+  }
+
   render() {
     const  { city } = this.state;
 
     this.host.innerHTML = "";
-    this.host.appendChild(this.locationSearch.update({ city }));
+    this.host.appendChild(this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }));
 
     return this.host;
   }

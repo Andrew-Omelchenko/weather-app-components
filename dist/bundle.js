@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,68 +68,8 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(1);
-
-
-const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.getElementById("root"));
-app.render();
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__ = __webpack_require__(3);
-// import * as config from "./src/utils/config";
-
-// import { getForecast } from "./src/utils/api";
-// import { StorageService } from "./src/services/storage_service";
-// import { FavoritesService } from "./src/services/favorites_service";
-// import { HistoryService } from "./src/services/history_service";
-
-
-class App {
-  constructor(host) {
-    this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* parseLocation */](window.location.href) || "",
-      isValid: true
-    };
-
-    // bindAll(this, 'handleSubmit');
-
-    this.host = host;
-
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]();
-  }
-
-  updateState(nextState) {
-    this.state = nextState;
-    this.render();
-  }
-
-  render() {
-    const  { city } = this.state;
-
-    this.host.innerHTML = "";
-    this.host.appendChild(this.locationSearch.update({ city }));
-
-    return this.host;
-  }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (App);
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* unused harmony export extractBase */
-/* harmony export (immutable) */ __webpack_exports__["a"] = parseLocation;
+/* harmony export (immutable) */ __webpack_exports__["b"] = parseLocation;
 /* unused harmony export toFahrenheit */
 /* unused harmony export toCelsius */
 /* unused harmony export toMph */
@@ -137,6 +77,20 @@ class App {
 /* unused harmony export clearSelect */
 /* unused harmony export populateSelect */
 /* unused harmony export addFavoriteLocation */
+const bindAll = (context, ...names) => {
+  names.forEach(name => {
+    if (typeof context[name] === "function") {
+      context[name] = context[name].bind(context);
+    } else {
+      throw Error(
+        `Expected function ${name}. Instead received: ${typeof context[name]}`
+      );
+    }
+  });
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = bindAll;
+
+
 /**
  * Extracts base url from full url string
  * @param {string} urlString - current full url string
@@ -237,14 +191,74 @@ function addFavoriteLocation(doc, controller, favListId) {
   const result = controller.addFavorite();
   if (result) {
     clearSelect(favListId);
-    populateSelect(
-      doc,
-      favListId,
-      controller.getFavorites(),
-      "normal"
-    );
+    populateSelect(doc, favListId, controller.getFavorites(), "normal");
   }
-};
+}
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(2);
+
+
+const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.getElementById("root"));
+app.render();
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__ = __webpack_require__(3);
+// import * as config from "./src/utils/config";
+
+// import { getForecast } from "./src/utils/api";
+// import { StorageService } from "./src/services/storage_service";
+// import { FavoritesService } from "./src/services/favorites_service";
+// import { HistoryService } from "./src/services/history_service";
+
+
+class App {
+  constructor(host) {
+    this.state = {
+      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["b" /* parseLocation */](window.location.href) || "",
+      isValid: true
+    };
+
+    __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* bindAll */](this, 'onSearchSubmit');
+
+    this.host = host;
+
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]();
+  }
+
+  updateState(nextState) {
+    this.state = nextState;
+    this.render();
+  }
+
+  onSearchSubmit(city) {
+    this.updateState({ city });
+    console.log(this.state);
+  }
+
+  render() {
+    const  { city } = this.state;
+
+    this.host.innerHTML = "";
+    this.host.appendChild(this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }));
+
+    return this.host;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (App);
 
 
 /***/ }),
@@ -252,18 +266,21 @@ function addFavoriteLocation(doc, controller, favListId) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+
+
 class LocationSearch {
   constructor() {
     this.state = {
       isValid: true
     };
 
-    // bindAll(this, 'onSubmit');
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, 'handleSubmit');
 
     this.host = document.createElement("div");
     this.host.classList.add("location-search-container");
 
-    this.host.addEventListener("submit", this.onSubmit);
+    this.host.addEventListener("submit", this.handleSubmit);
   }
 
   onBeforeUpdate(nextProps) {}
@@ -274,7 +291,7 @@ class LocationSearch {
     return this.render();
   }
 
-  onSubmit(ev) {
+  handleSubmit(ev) {
     ev.preventDefault();
 
     const city = ev.target.elements.city.value.trim();
@@ -282,7 +299,7 @@ class LocationSearch {
     if (!city.length) {
       this.updateState({ isValid: false });
     } else {
-      // this.props.onSubmit(city);
+      this.props.onSubmit(city);
     }
   }
 

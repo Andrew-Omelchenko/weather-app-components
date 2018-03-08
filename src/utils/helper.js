@@ -1,3 +1,15 @@
+export const bindAll = (context, ...names) => {
+  names.forEach(name => {
+    if (typeof context[name] === "function") {
+      context[name] = context[name].bind(context);
+    } else {
+      throw Error(
+        `Expected function ${name}. Instead received: ${typeof context[name]}`
+      );
+    }
+  });
+};
+
 /**
  * Extracts base url from full url string
  * @param {string} urlString - current full url string
@@ -98,11 +110,6 @@ export function addFavoriteLocation(doc, controller, favListId) {
   const result = controller.addFavorite();
   if (result) {
     clearSelect(favListId);
-    populateSelect(
-      doc,
-      favListId,
-      controller.getFavorites(),
-      "normal"
-    );
+    populateSelect(doc, favListId, controller.getFavorites(), "normal");
   }
-};
+}
