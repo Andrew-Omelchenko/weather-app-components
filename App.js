@@ -17,7 +17,9 @@ class App {
 
     this.host = host;
 
-    this.locationSearch = new LocationSearch();
+    this.locationSearch = new LocationSearch({
+      city: this.state.city, onSubmit: this.onSearchSubmit
+    });
   }
 
   updateState(nextState) {

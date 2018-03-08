@@ -1,10 +1,11 @@
 import * as helper from "../utils/helper";
 
 class LocationSearch {
-  constructor() {
+  constructor(props) {
     this.state = {
       isValid: true
     };
+    this.props = props;
 
     helper.bindAll(this, 'handleSubmit');
 
@@ -27,11 +28,13 @@ class LocationSearch {
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!city.length) {
-      this.updateState({ isValid: false });
+    if (!helper.isValidCityName(city)) {
+      this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
+      this.state.isValid = true;
     }
+    console.log(this.state, this.props);
   }
 
   render() {

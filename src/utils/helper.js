@@ -10,6 +10,10 @@ export const bindAll = (context, ...names) => {
   });
 };
 
+export function isValidCityName(name) {
+  return !!name && !/\d/.test(name);
+};
+
 /**
  * Extracts base url from full url string
  * @param {string} urlString - current full url string

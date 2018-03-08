@@ -68,8 +68,9 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["b"] = isValidCityName;
 /* unused harmony export extractBase */
-/* harmony export (immutable) */ __webpack_exports__["b"] = parseLocation;
+/* harmony export (immutable) */ __webpack_exports__["c"] = parseLocation;
 /* unused harmony export toFahrenheit */
 /* unused harmony export toCelsius */
 /* unused harmony export toMph */
@@ -90,6 +91,10 @@ const bindAll = (context, ...names) => {
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = bindAll;
 
+
+function isValidCityName(name) {
+  return !!name && !/\d/.test(name);
+};
 
 /**
  * Extracts base url from full url string
@@ -227,7 +232,7 @@ app.render();
 class App {
   constructor(host) {
     this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["b" /* parseLocation */](window.location.href) || "",
+      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["c" /* parseLocation */](window.location.href) || "",
       isValid: true
     };
 
@@ -235,7 +240,9 @@ class App {
 
     this.host = host;
 
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]();
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]({
+      city: this.state.city, onSubmit: this.onSearchSubmit
+    });
   }
 
   updateState(nextState) {
@@ -245,7 +252,6 @@ class App {
 
   onSearchSubmit(city) {
     this.updateState({ city });
-    console.log(this.state);
   }
 
   render() {
@@ -270,10 +276,11 @@ class App {
 
 
 class LocationSearch {
-  constructor() {
+  constructor(props) {
     this.state = {
       isValid: true
     };
+    this.props = props;
 
     __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, 'handleSubmit');
 
@@ -296,11 +303,13 @@ class LocationSearch {
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!city.length) {
-      this.updateState({ isValid: false });
+    if (!__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* isValidCityName */](city)) {
+      this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
+      this.state.isValid = true;
     }
+    console.log(this.state, this.props);
   }
 
   render() {
