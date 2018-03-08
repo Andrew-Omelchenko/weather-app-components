@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -206,12 +206,52 @@ function addFavoriteLocation(doc, controller, favListId) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
 
 
-const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */](document.getElementById("root"));
-app.render();
+class Component {
+  constructor(props) {
+    this.state = {};
+    this.props = props || {};
+    this.host = null;
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "updateState", "update");
+  }
+
+  _render() {
+    const children = this.render();
+
+    this.host.innerHTML = "";
+
+    if (typeof children === "string") {
+      this.host.innerHTML = children;
+    } else if (Array.isArray(children)) {
+      this.host.append(... children);
+    } else {
+      this.host.append(children);
+    }
+
+    return this.host;
+  }
+
+  update(nextProps) {
+    this.props = nextProps;
+    return this._render();
+  }
+
+  updateState(state) {
+    const nextState = Object.assign({}, this.state, state);
+
+    this.state = nextState;
+    this._render();
+
+    return nextState;
+  }
+
+  render() {}
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component);
 
 
 /***/ }),
@@ -219,52 +259,12 @@ app.render();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__ = __webpack_require__(3);
-// import * as config from "./src/utils/config";
-
-// import { getForecast } from "./src/utils/api";
-// import StorageService from "./src/services/StorageService";
-// import FavoritesService from "./src/services/FavoritesService";
-// import HistoryService from "./src/services/HistoryService";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(3);
 
 
-class App {
-  constructor(host) {
-    this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["c" /* parseLocation */](window.location.href) || "",
-      isValid: true
-    };
-
-    __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* bindAll */](this, 'onSearchSubmit');
-
-    this.host = host;
-
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_1__src_components_LocationSearch__["a" /* default */]({
-      city: this.state.city, onSubmit: this.onSearchSubmit
-    });
-  }
-
-  updateState(nextState) {
-    this.state = nextState;
-    this.render();
-  }
-
-  onSearchSubmit(city) {
-    this.updateState({ city });
-  }
-
-  render() {
-    const  { city } = this.state;
-
-    this.host.innerHTML = "";
-    this.host.appendChild(this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }));
-
-    return this.host;
-  }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (App);
+const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */]({ host: document.getElementById("root") });
+app.update();
 
 
 /***/ }),
@@ -272,30 +272,142 @@ class App {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_utils_api__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__ = __webpack_require__(5);
+// import * as config from "./src/utils/config";
+
+
+
+// import StorageService from "./src/services/StorageService";
+// import FavoritesService from "./src/services/FavoritesService";
+// import HistoryService from "./src/services/HistoryService";
+
+
+class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* default */] {
+  constructor({ host }) {
+    super();
+
+    this.state = {
+      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["c" /* parseLocation */](window.location.href) || "",
+      todayForecast: null,
+      otherDaysForecast: null,
+      hasError: false
+    };
+
+    __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* bindAll */](this, "onSearchSubmit");
+
+    this.host = host;
+
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__["a" /* default */]({
+      city: this.state.city, onSubmit: this.onSearchSubmit
+    });
+  }
+
+  onSearchSubmit(city) {
+    this.updateState({ city });
+  }
+
+  handleError() {
+    this.updateState({ hasError: true });
+  }
+
+  computeNextState(data) {
+    const arr = data.data;
+    const today = arr.shift();
+    const otherDays = arr;
+    return {
+      todayForecast: today,
+      weekForecast: otherDays
+    };
+  }
+
+  getCityForecast(city) {
+    return Object(__WEBPACK_IMPORTED_MODULE_2__src_utils_api__["a" /* default */])(city)
+      .then(this.computeNextState)
+      .then(this.updateState)
+      .catch(this.handleError);
+  }
+
+  render() {
+    const  { city } = this.state;
+
+    return this.locationSearch.update({ city, onSubmit: this.onSearchSubmit });
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (App);
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const BASE_URL = "https://api.weatherbit.io/v2.0/forecast/daily";
+const KEY_MOD = "?key=";
+const API_KEY = "91e53c3974b54ac9871fe08adfd31dd9";
+const DAYS_MOD = "&days=";
+const LOC_MOD = "&city=";
+const UNITS_MOD = "&units=";
+
+const init = {
+  method: "GET",
+  headers: new Headers(),
+  mode: "cors",
+  cache: "default",
+  credentials: "omit"
+};
+
+const getForecast = (loc, days, units) => {
+  return fetch(
+    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${days}${UNITS_MOD}${units}${LOC_MOD}${loc}`,
+    init
+  )
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error(response.status);
+  })
+  .catch(error => {
+    console.log(error.message);
+    if (error.message === "Unexpected end of JSON input") {
+      alert("Requested location was not found. Try another one.");
+    } else {
+      alert("Error occured. Please try later.");
+    }
+  });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (getForecast);
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
 
 
-class LocationSearch {
+
+class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
   constructor(props) {
+    super(props);
+    
     this.state = {
       isValid: true
     };
-    this.props = props;
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, 'handleSubmit');
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit");
 
     this.host = document.createElement("div");
     this.host.classList.add("location-search-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
-  }
-
-  onBeforeUpdate(nextProps) {}
-
-  update(nextProps) {
-    this.onBeforeUpdate(nextProps);
-    this.props = nextProps;
-    return this.render();
   }
 
   handleSubmit(ev) {
@@ -316,15 +428,13 @@ class LocationSearch {
     const { isValid } = this.state;
     const { city } = this.props;
 
-    this.host.innerHTML = `
-        <form class=${isValid ? "location-search" : "location-search -invalid"}>
-          <input required name="city" type="text" placeholder="City name" class="location-search-input" value="${city}">
-          <button class="location-search-submit">Find</button>
-          <button type="button" class="location-favorites">Add to favorites</button>
-        </form>
+    return `
+      <form class=${isValid ? "location-search" : "location-search -invalid"}>
+        <input required name="city" type="text" placeholder="City name" class="location-search-input" value="${city}">
+        <button class="location-search-submit">Find</button>
+        <button type="button" class="location-favorites">Add to favorites</button>
+      </form>
     `;
-
-    return this.host;
   }
 }
 

@@ -1,4 +1,4 @@
 import App from "./App";
 
-const app = new App(document.getElementById("root"));
-app.render();
+const app = new App({ host: document.getElementById("root") });
+app.update();
