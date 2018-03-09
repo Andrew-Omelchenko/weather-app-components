@@ -272,10 +272,10 @@ app.update();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_utils_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__ = __webpack_require__(6);
 // import * as config from "./src/utils/config";
 
 
@@ -285,22 +285,22 @@ app.update();
 // import HistoryService from "./src/services/HistoryService";
 
 
-class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* default */] {
+class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
   constructor({ host }) {
     super();
 
     this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["c" /* parseLocation */](window.location.href) || "",
+      city: __WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* parseLocation */](window.location.href) || "",
       todayForecast: null,
       otherDaysForecast: null,
       hasError: false
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__["a" /* bindAll */](this, "onSearchSubmit");
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit");
 
     this.host = host;
 
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__["a" /* default */]({
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__["a" /* default */]({
       city: this.state.city, onSubmit: this.onSearchSubmit
     });
   }
@@ -330,13 +330,13 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* 
   }
 
   getCityForecast(city) {
-    return Object(__WEBPACK_IMPORTED_MODULE_2__src_utils_api__["a" /* default */])(city)
+    return Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* default */])(city)
       .then(this.computeNextState)
       .catch(this.handleError);
   }
 
   render() {
-    const  { city } = this.state;
+    const  { city, todayForecast, otherDaysForecast } = this.state;
 
     console.log(this.state);
 

@@ -1,11 +1,11 @@
 // import * as config from "./src/utils/config";
-import * as helper from "./src/utils/helper";
-import Component from "./src/framework/Component";
-import getForecast from "./src/utils/api";
+import * as helper from "./utils/helper";
+import Component from "./framework/Component";
+import getForecast from "./utils/api";
 // import StorageService from "./src/services/StorageService";
 // import FavoritesService from "./src/services/FavoritesService";
 // import HistoryService from "./src/services/HistoryService";
-import LocationSearch from "./src/components/LocationSearch";
+import LocationSearch from "./components/LocationSearch";
 
 class App extends Component {
   constructor({ host }) {
