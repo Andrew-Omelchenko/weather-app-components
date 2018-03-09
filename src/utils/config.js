@@ -13,7 +13,7 @@ export const DAY_OF_WEEK = [
 ];
 
 // number of days to forecast
-export const numOfDays = 7;
+export const NUM_OF_DAYS = 7;
 
 // Value, that limits number of entries in history or favorites lists
 export const limit = 30;

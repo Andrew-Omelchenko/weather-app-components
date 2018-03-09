@@ -28,7 +28,13 @@ class App extends Component {
   }
 
   onSearchSubmit(city) {
-    this.updateState({ city });
+    this.getCityForecast(city).then(({ todayForecast, otherDaysForecast }) => {
+      this.updateState({
+        todayForecast,
+        otherDaysForecast,
+        city
+      })
+    });
   }
 
   handleError() {
@@ -41,19 +47,20 @@ class App extends Component {
     const otherDays = arr;
     return {
       todayForecast: today,
-      weekForecast: otherDays
+      otherDaysForecast: otherDays
     };
   }
 
   getCityForecast(city) {
     return getForecast(city)
       .then(this.computeNextState)
-      .then(this.updateState)
       .catch(this.handleError);
   }
 
   render() {
-    const  { city } = this.state;
+    const  { city, todayForecast, otherDaysForecast } = this.state;
+
+    console.log(this.state);
 
     return this.locationSearch.update({ city, onSubmit: this.onSearchSubmit });
   }

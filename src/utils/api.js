@@ -1,3 +1,5 @@
+import { NUM_OF_DAYS } from "../utils/config";
+
 const BASE_URL = "https://api.weatherbit.io/v2.0/forecast/daily";
 const KEY_MOD = "?key=";
 const API_KEY = "91e53c3974b54ac9871fe08adfd31dd9";
@@ -13,9 +15,9 @@ const init = {
   credentials: "omit"
 };
 
-const getForecast = (loc, days, units) => {
+const getForecast = (loc) => {
   return fetch(
-    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${days}${UNITS_MOD}${units}${LOC_MOD}${loc}`,
+    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${NUM_OF_DAYS}${UNITS_MOD}M${LOC_MOD}${loc}`,
     init
   )
   .then(response => {

@@ -275,7 +275,7 @@ app.update();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__src_utils_helper__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_utils_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_components_LocationSearch__ = __webpack_require__(6);
 // import * as config from "./src/utils/config";
 
 
@@ -306,7 +306,13 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* 
   }
 
   onSearchSubmit(city) {
-    this.updateState({ city });
+    this.getCityForecast(city).then(({ todayForecast, otherDaysForecast }) => {
+      this.updateState({
+        todayForecast,
+        otherDaysForecast,
+        city
+      })
+    });
   }
 
   handleError() {
@@ -319,19 +325,20 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* 
     const otherDays = arr;
     return {
       todayForecast: today,
-      weekForecast: otherDays
+      otherDaysForecast: otherDays
     };
   }
 
   getCityForecast(city) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__src_utils_api__["a" /* default */])(city)
       .then(this.computeNextState)
-      .then(this.updateState)
       .catch(this.handleError);
   }
 
   render() {
     const  { city } = this.state;
+
+    console.log(this.state);
 
     return this.locationSearch.update({ city, onSubmit: this.onSearchSubmit });
   }
@@ -345,6 +352,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__src_framework_Component__["a" /* 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(5);
+
+
 const BASE_URL = "https://api.weatherbit.io/v2.0/forecast/daily";
 const KEY_MOD = "?key=";
 const API_KEY = "91e53c3974b54ac9871fe08adfd31dd9";
@@ -360,9 +370,9 @@ const init = {
   credentials: "omit"
 };
 
-const getForecast = (loc, days, units) => {
+const getForecast = (loc) => {
   return fetch(
-    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${days}${UNITS_MOD}${units}${LOC_MOD}${loc}`,
+    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* NUM_OF_DAYS */]}${UNITS_MOD}M${LOC_MOD}${loc}`,
     init
   )
   .then(response => {
@@ -386,6 +396,58 @@ const getForecast = (loc, days, units) => {
 
 /***/ }),
 /* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// Base URL for icons
+const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
+/* unused harmony export ICON_BASE */
+
+
+// Weekday names array
+const DAY_OF_WEEK = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+/* unused harmony export DAY_OF_WEEK */
+
+
+// number of days to forecast
+const NUM_OF_DAYS = 7;
+/* harmony export (immutable) */ __webpack_exports__["a"] = NUM_OF_DAYS;
+
+
+// Value, that limits number of entries in history or favorites lists
+const limit = 30;
+/* unused harmony export limit */
+
+
+// Unit systems
+const unitSystems = {
+  metric: {
+    name: "metric",
+    code: "M",
+    temperatureUnit: "C",
+    velocityUnit: "m/s"
+  },
+  imperial: {
+    name: "imperial",
+    code: "I",
+    temperatureUnit: "F",
+    velocityUnit: "mph"
+  }
+};
+/* unused harmony export unitSystems */
+
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
