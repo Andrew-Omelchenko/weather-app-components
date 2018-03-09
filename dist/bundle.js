@@ -60,11 +60,64 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
+
+
+class Component {
+  constructor(props) {
+    this.state = {};
+    this.props = props || {};
+    this.host = null;
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "updateState", "update");
+  }
+
+  _render() {
+    const children = this.render();
+
+    this.host.innerHTML = "";
+
+    if (typeof children === "string") {
+      this.host.innerHTML = children;
+    } else if (Array.isArray(children)) {
+      this.host.append(... children);
+    } else {
+      this.host.append(children);
+    }
+
+    return this.host;
+  }
+
+  update(nextProps) {
+    this.props = nextProps;
+    return this._render();
+  }
+
+  updateState(state) {
+    const nextState = Object.assign({}, this.state, state);
+
+    this.state = nextState;
+    this._render();
+
+    return nextState;
+  }
+
+  render() {}
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component);
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -202,69 +255,55 @@ function addFavoriteLocation(doc, controller, favListId) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
-
-
-class Component {
-  constructor(props) {
-    this.state = {};
-    this.props = props || {};
-    this.host = null;
-
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "updateState", "update");
-  }
-
-  _render() {
-    const children = this.render();
-
-    this.host.innerHTML = "";
-
-    if (typeof children === "string") {
-      this.host.innerHTML = children;
-    } else if (Array.isArray(children)) {
-      this.host.append(... children);
-    } else {
-      this.host.append(children);
-    }
-
-    return this.host;
-  }
-
-  update(nextProps) {
-    this.props = nextProps;
-    return this._render();
-  }
-
-  updateState(state) {
-    const nextState = Object.assign({}, this.state, state);
-
-    this.state = nextState;
-    this._render();
-
-    return nextState;
-  }
-
-  render() {}
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component);
-
-
-/***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(3);
+// Base URL for icons
+const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
+/* harmony export (immutable) */ __webpack_exports__["b"] = ICON_BASE;
 
 
-const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */]({ host: document.getElementById("root") });
-app.update();
+// Weekday names array
+const DAY_OF_WEEK = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+/* harmony export (immutable) */ __webpack_exports__["a"] = DAY_OF_WEEK;
+
+
+// number of days to forecast
+const NUM_OF_DAYS = 7;
+/* harmony export (immutable) */ __webpack_exports__["c"] = NUM_OF_DAYS;
+
+
+// Value, that limits number of entries in history or favorites lists
+const limit = 30;
+/* unused harmony export limit */
+
+
+// Unit systems
+const unitSystems = {
+  metric: {
+    name: "metric",
+    code: "M",
+    temperatureUnit: "C",
+    velocityUnit: "m/s"
+  },
+  imperial: {
+    name: "imperial",
+    code: "I",
+    temperatureUnit: "F",
+    velocityUnit: "mph"
+  }
+};
+/* unused harmony export unitSystems */
+
 
 
 /***/ }),
@@ -272,10 +311,25 @@ app.update();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(4);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(4);
+
+
+const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */]({ host: document.getElementById("root") });
+app.update();
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_OtherDaysForecast__ = __webpack_require__(8);
 // import * as config from "./src/utils/config";
 
 
@@ -283,6 +337,8 @@ app.update();
 // import StorageService from "./src/services/StorageService";
 // import FavoritesService from "./src/services/FavoritesService";
 // import HistoryService from "./src/services/HistoryService";
+
+
 
 
 class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
@@ -302,6 +358,12 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
     this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__["a" /* default */]({
       city: this.state.city, onSubmit: this.onSearchSubmit
+    });
+    this.todayForecast = new __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__["a" /* default */]({
+      city: this.state.city, forecast: this.state.todayForecast
+    });
+    this.otherDaysForecast = new __WEBPACK_IMPORTED_MODULE_5__components_OtherDaysForecast__["a" /* default */]({
+      forecast: this.state.otherDaysForecast
     });
   }
 
@@ -340,7 +402,11 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
     console.log(this.state);
 
-    return this.locationSearch.update({ city, onSubmit: this.onSearchSubmit });
+    return [
+      this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }),
+      !todayForecast ? "" : this.todayForecast.update({ city, forecast: todayForecast }),
+      !otherDaysForecast ? "" : this.otherDaysForecast.update({ forecast: otherDaysForecast })
+    ];
   }
 }
 
@@ -348,11 +414,11 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
 
 
 const BASE_URL = "https://api.weatherbit.io/v2.0/forecast/daily";
@@ -372,7 +438,7 @@ const init = {
 
 const getForecast = (loc) => {
   return fetch(
-    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* NUM_OF_DAYS */]}${UNITS_MOD}M${LOC_MOD}${loc}`,
+    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${__WEBPACK_IMPORTED_MODULE_0__utils_config__["c" /* NUM_OF_DAYS */]}${UNITS_MOD}M${LOC_MOD}${loc}`,
     init
   )
   .then(response => {
@@ -395,64 +461,12 @@ const getForecast = (loc) => {
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// Base URL for icons
-const ICON_BASE = "https://www.weatherbit.io/static/img/icons/";
-/* unused harmony export ICON_BASE */
-
-
-// Weekday names array
-const DAY_OF_WEEK = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-];
-/* unused harmony export DAY_OF_WEEK */
-
-
-// number of days to forecast
-const NUM_OF_DAYS = 7;
-/* harmony export (immutable) */ __webpack_exports__["a"] = NUM_OF_DAYS;
-
-
-// Value, that limits number of entries in history or favorites lists
-const limit = 30;
-/* unused harmony export limit */
-
-
-// Unit systems
-const unitSystems = {
-  metric: {
-    name: "metric",
-    code: "M",
-    temperatureUnit: "C",
-    velocityUnit: "m/s"
-  },
-  imperial: {
-    name: "imperial",
-    code: "I",
-    temperatureUnit: "F",
-    velocityUnit: "mph"
-  }
-};
-/* unused harmony export unitSystems */
-
-
-
-/***/ }),
 /* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
 
 
 
@@ -467,7 +481,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit");
 
     this.host = document.createElement("div");
-    this.host.classList.add("location-search-container");
+    this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
   }
@@ -492,15 +506,102 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     return `
       <form class=${isValid ? "location-search" : "location-search -invalid"}>
-        <input required name="city" type="text" placeholder="City name" class="location-search-input" value="${city}">
-        <button class="location-search-submit">Find</button>
-        <button type="button" class="location-favorites">Add to favorites</button>
+        <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
+        <button class="btn">Find</button>
       </form>
     `;
   }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (LocationSearch);
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+
+
+
+class TodayForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+  constructor() {
+    super();
+
+    this.host = document.createElement("div");
+    this.host.classList.add("flex-container");
+  }
+
+  render() {
+    const { city, forecast } = this.props;
+
+    console.log(city, forecast);
+
+    return `
+      <div class="flex-container main-panel">
+        <div class="left-panel">
+          <h1 class="city-name">${city}</h1>
+          <h2>${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
+          <h3 class="date">${forecast.datetime}</h3>
+          <p class="temperature">t: ${Math.round(forecast.temp)}&deg;</p>
+          <p class="min-temp">t.min: ${Math.round(forecast.min_temp)}&deg;</p>
+          <p class="max-temp">t.max: ${Math.round(forecast.max_temp)}&deg;</p>
+        </div>
+        <div class="right-panel">
+          <div class="img-container">
+            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_0__utils_config__["b" /* ICON_BASE */]}${forecast.weather.icon}.png" alt="Icon">
+          </div>
+          <h3>${forecast.weather.description}</h3>
+          <p>Humidity: ${forecast.rh}%</p>
+          <p>Wind: ${forecast.wind_spd}m/s ${forecast.wind_cdir}</p>
+        </div>
+      </div>
+    `;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (TodayForecast);
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+
+
+
+class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+  constructor() {
+    super();
+
+    this.host = document.createElement("div");
+    this.host.classList.add("flex-container");
+  }
+
+  render() {
+    const { forecast } = this.props;
+
+    return forecast
+    .map(item => `
+        <div class="day-panel">
+          <h2>${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* DAY_OF_WEEK */][new Date(item.datetime).getDay()]}</h2>
+          <h3 class="date">${item.datetime}</h3>
+          <div class="img-container">
+            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_0__utils_config__["b" /* ICON_BASE */]}${item.weather.icon}.png" alt="Icon">
+          </div>
+          <h4>${item.weather.description}</h4>
+          <h2>t: ${Math.round(item.temp)}&deg;</h2>
+        </div>
+    `)
+    .join("");
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (OtherDaysForecast);
 
 
 /***/ })

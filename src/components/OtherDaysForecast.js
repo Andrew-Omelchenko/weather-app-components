@@ -1,23 +1,31 @@
 import { ICON_BASE, DAY_OF_WEEK } from "../utils/config";
+import Component from '../framework/Component';
 
-const host = document.getElementById("other-days-forecast-container");
+class OtherDaysForecast extends Component {
+  constructor() {
+    super();
 
-const render = data => {
-  const items = data
+    this.host = document.createElement("div");
+    this.host.classList.add("flex-container");
+  }
+
+  render() {
+    const { forecast } = this.props;
+
+    return forecast
     .map(item => `
-        <div>
-          <h3>${DAY_OF_WEEK[new Date(item.datetime).getDay()]}</h3>
-          <img src="${ICON_BASE}${item.weather.icon}.png" alt="Icon">
-          <h4>Temp: ${item.weather.description}</h4>
-          <h4>${item.temp}</h4>
+        <div class="day-panel">
+          <h2>${DAY_OF_WEEK[new Date(item.datetime).getDay()]}</h2>
+          <h3 class="date">${item.datetime}</h3>
+          <div class="img-container">
+            <img class="img" src="${ICON_BASE}${item.weather.icon}.png" alt="Icon">
+          </div>
+          <h4>${item.weather.description}</h4>
+          <h2>t: ${Math.round(item.temp)}&deg;</h2>
         </div>
     `)
     .join("");
+  }
+}
 
-  host.innerHTML = `
-    <div class='other-days-forecast'>
-      ${items}
-    </div>`;
-};
-
-export default render;
+export default OtherDaysForecast;

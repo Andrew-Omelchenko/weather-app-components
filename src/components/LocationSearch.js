@@ -12,7 +12,7 @@ class LocationSearch extends Component {
     helper.bindAll(this, "handleSubmit");
 
     this.host = document.createElement("div");
-    this.host.classList.add("location-search-container");
+    this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
   }
@@ -37,9 +37,8 @@ class LocationSearch extends Component {
 
     return `
       <form class=${isValid ? "location-search" : "location-search -invalid"}>
-        <input required name="city" type="text" placeholder="City name" class="location-search-input" value="${city}">
-        <button class="location-search-submit">Find</button>
-        <button type="button" class="location-favorites">Add to favorites</button>
+        <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
+        <button class="btn">Find</button>
       </form>
     `;
   }
