@@ -21,7 +21,7 @@ class App extends Component {
       hasError: false
     };
 
-    helper.bindAll(this, "onSearchSubmit", "onSwitchUnits");
+    helper.bindAll(this, "onSearchSubmit", "onSwitchUnits", "handleError");
 
     this.host = host;
 
@@ -55,17 +55,25 @@ class App extends Component {
   }
 
   handleError() {
-    this.updateState({ hasError: true });
+    this.state.hasError = true;
   }
 
   computeNextState(data) {
-    const arr = data.data;
-    const today = arr.shift();
-    const otherDays = arr;
-    return {
-      todayForecast: today,
-      otherDaysForecast: otherDays
-    };
+    if (!data) {
+      return {
+        todayForecast: null,
+        otherDaysForecast: null
+      };
+    } else {
+      const arr = data.data;
+      const today = arr.shift();
+      const otherDays = arr;
+
+      return {
+        todayForecast: today,
+        otherDaysForecast: otherDays
+      };
+    }
   }
 
   getCityForecast(city) {
@@ -76,8 +84,6 @@ class App extends Component {
 
   render() {
     const { city, todayForecast, otherDaysForecast, isMetric } = this.state;
-
-    console.log(this.state);
 
     return [
       this.locationSearch.update({

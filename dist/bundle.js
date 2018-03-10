@@ -353,7 +353,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       hasError: false
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit", "onSwitchUnits");
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit", "onSwitchUnits", "handleError");
 
     this.host = host;
 
@@ -387,17 +387,25 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   }
 
   handleError() {
-    this.updateState({ hasError: true });
+    this.state.hasError = true;
   }
 
   computeNextState(data) {
-    const arr = data.data;
-    const today = arr.shift();
-    const otherDays = arr;
-    return {
-      todayForecast: today,
-      otherDaysForecast: otherDays
-    };
+    if (!data) {
+      return {
+        todayForecast: null,
+        otherDaysForecast: null
+      };
+    } else {
+      const arr = data.data;
+      const today = arr.shift();
+      const otherDays = arr;
+
+      return {
+        todayForecast: today,
+        otherDaysForecast: otherDays
+      };
+    }
   }
 
   getCityForecast(city) {
@@ -408,8 +416,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
   render() {
     const { city, todayForecast, otherDaysForecast, isMetric } = this.state;
-
-    console.log(this.state);
 
     return [
       this.locationSearch.update({
@@ -472,7 +478,6 @@ const getForecast = (loc) => {
     throw new Error(response.status);
   })
   .catch(error => {
-    console.log(error.message);
     if (error.message === "Unexpected end of JSON input") {
       alert("Requested location was not found. Try another one.");
     } else {
@@ -523,7 +528,6 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
       this.props.onSubmit(city);
       this.state.isValid = true;
     }
-    console.log(this.state, this.props);
   }
 
   handleClick(ev) {
@@ -575,8 +579,6 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
     const tempUnits = isMetric ? "C" : "F";
     const velocityUnits = isMetric ? "m/s" : "mph";
 
-    console.log(city, forecast);
-
     return `
       <div class="flex-container main-panel">
         <div class="left-panel">
@@ -585,25 +587,25 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
           <h3 class="date">${forecast.datetime}</h3>
           <p class="temperature">t: ${Math.round(
             isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
           <p class="min-temp">t.min: ${Math.round(
             isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.min_temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
           <p class="max-temp">t.max: ${Math.round(
             isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.max_temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
         </div>
         <div class="right-panel">
           <div class="img-container">
             <img class="img" src="${__WEBPACK_IMPORTED_MODULE_1__utils_config__["b" /* ICON_BASE */]}${
-      forecast.weather.icon
-    }.png" alt="Icon">
+              forecast.weather.icon
+              }.png" alt="Icon">
           </div>
           <h3>${forecast.weather.description}</h3>
           <p>Humidity: ${forecast.rh}%</p>
           <p>Wind: ${
             isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toMph */])(forecast.wind_spd)
-          }${velocityUnits} ${forecast.wind_cdir}</p>
+            }${velocityUnits} ${forecast.wind_cdir}</p>
         </div>
       </div>
     `;

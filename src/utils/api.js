@@ -27,7 +27,6 @@ const getForecast = (loc) => {
     throw new Error(response.status);
   })
   .catch(error => {
-    console.log(error.message);
     if (error.message === "Unexpected end of JSON input") {
       alert("Requested location was not found. Try another one.");
     } else {

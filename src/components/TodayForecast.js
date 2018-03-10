@@ -16,8 +16,6 @@ class TodayForecast extends Component {
     const tempUnits = isMetric ? "C" : "F";
     const velocityUnits = isMetric ? "m/s" : "mph";
 
-    console.log(city, forecast);
-
     return `
       <div class="flex-container main-panel">
         <div class="left-panel">
@@ -26,25 +24,25 @@ class TodayForecast extends Component {
           <h3 class="date">${forecast.datetime}</h3>
           <p class="temperature">t: ${Math.round(
             isMetric ? forecast.temp : toFahrenheit(forecast.temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
           <p class="min-temp">t.min: ${Math.round(
             isMetric ? forecast.min_temp : toFahrenheit(forecast.min_temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
           <p class="max-temp">t.max: ${Math.round(
             isMetric ? forecast.max_temp : toFahrenheit(forecast.max_temp)
-          )}&deg;${tempUnits}</p>
+            )}&deg;${tempUnits}</p>
         </div>
         <div class="right-panel">
           <div class="img-container">
             <img class="img" src="${ICON_BASE}${
-      forecast.weather.icon
-    }.png" alt="Icon">
+              forecast.weather.icon
+              }.png" alt="Icon">
           </div>
           <h3>${forecast.weather.description}</h3>
           <p>Humidity: ${forecast.rh}%</p>
           <p>Wind: ${
             isMetric ? forecast.wind_spd : toMph(forecast.wind_spd)
-          }${velocityUnits} ${forecast.wind_cdir}</p>
+            }${velocityUnits} ${forecast.wind_cdir}</p>
         </div>
       </div>
     `;

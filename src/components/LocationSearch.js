@@ -30,7 +30,6 @@ class LocationSearch extends Component {
       this.props.onSubmit(city);
       this.state.isValid = true;
     }
-    console.log(this.state, this.props);
   }
 
   handleClick(ev) {
