@@ -1,13 +1,24 @@
-import { toFahrenheit, toMph } from "../utils/helper";
+import { bindAll, toFahrenheit, toMph } from "../utils/helper";
 import { ICON_BASE, DAY_OF_WEEK } from "../utils/config";
 import Component from "../framework/Component";
 
 class TodayForecast extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    bindAll(this, "handleClick");
 
     this.host = document.createElement("div");
     this.host.classList.add("flex-container");
+
+    this.host.addEventListener("click", this.handleClick);
+  }
+
+  handleClick(ev) {
+    if (ev.target === document.getElementById("add-favorite-btn")) {
+      console.log("Inside handleClick add-favorite-btn");
+      this.props.onAddFavorite();
+    }
   }
 
   render() {
@@ -19,6 +30,12 @@ class TodayForecast extends Component {
     return `
       <div class="flex-container main-panel">
         <div class="left-panel">
+          <button class="btn btn-active" 
+            id="add-favorite-btn" 
+            title="Adds city to favorites" 
+            aria-label="Add favorite location">
+            <i class="fa fa-star" aria-hidden="true"></i>
+          </button>
           <h1 class="city-name">${city}</h1>
           <h2>${DAY_OF_WEEK[new Date(forecast.datetime).getDay()]}</h2>
           <h3 class="date">${forecast.datetime}</h3>

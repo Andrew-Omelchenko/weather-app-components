@@ -1,8 +1,11 @@
-import * as config from "../utils/config";
-import { ListService } from "./ListService";
+import { LIMIT } from "../utils/config";
+import ListService from "./ListService";
 
 /** Class representing a favorites service. */
 class FavoritesService extends ListService {
+  constructor(storageSvc, name) {
+    super(storageSvc, name);
+  }
 
   /**
    * Adds item to the favorites list
@@ -11,22 +14,22 @@ class FavoritesService extends ListService {
    */
   add(item) {
     // is there the same element?
-    for (let elem of this.data) {
+    for (let elem of this._data) {
       if (elem == item) {
         console.log("Item is already present.")
         return false;
       }
     }
     // check length limit
-    if (this.data.length === config.limit) {
-      this.data.pop();
+    if (this._data.length === LIMIT) {
+      this._data.pop();
     }
     // add item
-    this.data.push(item);
-    this.data.sort();
-    this.storageService.write(this.data, this.name);
+    this._data.push(item);
+    this._data.sort();
+    this._storageService.write(this._data, this._name);
     console.log("Favorites service. Adding favorite.");
-    console.log(this.data);
+    console.log(this._data);
     return true;
   }
 }

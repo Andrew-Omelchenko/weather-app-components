@@ -16,20 +16,4 @@ export const DAY_OF_WEEK = [
 export const NUM_OF_DAYS = 7;
 
 // Value, that limits number of entries in history or favorites lists
-export const limit = 30;
-
-// Unit systems
-export const unitSystems = {
-  metric: {
-    name: "metric",
-    code: "M",
-    temperatureUnit: "C",
-    velocityUnit: "m/s"
-  },
-  imperial: {
-    name: "imperial",
-    code: "I",
-    temperatureUnit: "F",
-    velocityUnit: "mph"
-  }
-};
+export const LIMIT = 10;

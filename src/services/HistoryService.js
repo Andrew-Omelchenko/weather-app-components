@@ -1,8 +1,11 @@
-import * as config from "../utils/config.js";
-import { ListService } from "./list_service.js";
+import { LIMIT } from "../utils/config";
+import ListService from "./ListService";
 
 /** Class representing a history service. */
 class HistoryService extends ListService {
+  constructor(storageSvc, name) {
+    super(storageSvc, name);
+  }
 
   /**
    * Adds item to the history list
@@ -10,30 +13,30 @@ class HistoryService extends ListService {
    * @returns {boolean} true, if item was added, false - otherwise
    */
   add(item) {
-    // check last
-    if (item === this.data[this.data.length - 1]) {
+    // check first
+    if (item === this._data[0]) {
       console.log("Such last entry already exists.");
       return false;
     }
     // remove duplicates
-    if (this.data && this.data.length > 0) {
+    if (this._data) {
       const tmp = [];
-      for (let elem of this.data) {
+      for (let elem of this._data) {
         if (elem != item) {
           tmp.push(elem);
         }
       }
-      this.data = tmp;
+      this._data = tmp;
     }
     // check length limit
-    if (this.data.length === config.limit) {
-      this.data.shift();
+    if (this._data.length === LIMIT) {
+      this._data.pop();
     }
     // add item
-    this.data.push(item);
-    this.storageService.write(this.data, this.name);
+    this._data.unshift(item);
+    this._storageService.write(this.data, this.name);
     console.log("History service. Adding history item.");
-    console.log(this.data);
+    console.log(this._data);
     return true;
   }
 }

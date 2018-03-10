@@ -15,7 +15,6 @@ class LocationSearch extends Component {
     this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
-
     this.host.addEventListener("click", this.handleClick);
   }
 
@@ -43,10 +42,23 @@ class LocationSearch extends Component {
     const { city } = this.props;
 
     return `
-      <form class=${isValid ? "location-search" : "location-search -invalid"}>
-        <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
-        <button class="btn" type="submit">Find</button>
-        <button class="btn" id="units-btn" type="button">Units</button>
+      <form class="flex-container">
+        <div>
+          <input required class="btn" name="city" type="text" placeholder="City name" value="${city}">
+          <button class="btn btn-active" 
+            type="submit"
+            title="Searches location" 
+            aria-label="Search location">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button>
+        </div>
+        <button class="btn btn-active" 
+          id="units-btn" 
+          type="button" 
+          title="Selects metric or imperial units" 
+          aria-label="Switch units">
+            &deg;C/&deg;F
+        </button>
       </form>
     `;
   }

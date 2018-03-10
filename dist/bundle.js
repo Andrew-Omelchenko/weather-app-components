@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,16 +68,12 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = isValidCityName;
-/* unused harmony export extractBase */
-/* harmony export (immutable) */ __webpack_exports__["c"] = parseLocation;
-/* harmony export (immutable) */ __webpack_exports__["d"] = toFahrenheit;
-/* unused harmony export toCelsius */
-/* harmony export (immutable) */ __webpack_exports__["e"] = toMph;
-/* unused harmony export toMs */
-/* unused harmony export clearSelect */
+/* harmony export (immutable) */ __webpack_exports__["c"] = isValidCityName;
+/* harmony export (immutable) */ __webpack_exports__["b"] = extractBase;
+/* harmony export (immutable) */ __webpack_exports__["d"] = parseLocation;
+/* harmony export (immutable) */ __webpack_exports__["e"] = toFahrenheit;
+/* harmony export (immutable) */ __webpack_exports__["f"] = toMph;
 /* unused harmony export populateSelect */
-/* unused harmony export addFavoriteLocation */
 const bindAll = (context, ...names) => {
   names.forEach(name => {
     if (typeof context[name] === "function") {
@@ -125,40 +121,12 @@ function toFahrenheit(value) {
 }
 
 /**
- * Converts temperature value from degrees Fahrenheit to degrees Celsius
- * @param {number} value - current value in degrees Fahrenheit
- * @returns {number} value in degrees Celsius
- */
-function toCelsius(value) {
-  return Math.round((value - 32) / 1.8);
-}
-
-/**
  * Converts velocity value from meters per second to miles per hour
  * @param {number} value - current value in m/s
  * @returns {number} value in mph
  */
 function toMph(value) {
   return Math.round(value * 2.25);
-}
-
-/**
- * Converts velocity value from miles per hour to meters per second
- * @param {number} value - current value in mph
- * @returns {number} value in m/s
- */
-function toMs(value) {
-  return Math.round(value / 2.25);
-}
-
-/**
- * Clears content of the specified html element
- * @param {HTMLElementObject} selectId - html element
- */
-function clearSelect(selectId) {
-  while (selectId.firstChild) {
-    selectId.removeChild(selectId.firstChild);
-  }
 }
 
 /**
@@ -182,21 +150,6 @@ function populateSelect(doc, selectId, data, direction) {
       opt.value = data[i];
       selectId.appendChild(opt);
     }
-  }
-}
-
-/**
- * Helper function for 'add favorite' button listener
- * @param {Document} doc - current Document object
- * @param {WeatherController} controller - current WeatherController object
- * @param {HTMLElementObject} favListId - html element
- */
-function addFavoriteLocation(doc, controller, favListId) {
-  // console.log("Inside add favorite listener");
-  const result = controller.addFavorite();
-  if (result) {
-    clearSelect(favListId);
-    populateSelect(doc, favListId, controller.getFavorites(), "normal");
   }
 }
 
@@ -279,30 +232,12 @@ const DAY_OF_WEEK = [
 
 // number of days to forecast
 const NUM_OF_DAYS = 7;
-/* harmony export (immutable) */ __webpack_exports__["c"] = NUM_OF_DAYS;
+/* harmony export (immutable) */ __webpack_exports__["d"] = NUM_OF_DAYS;
 
 
 // Value, that limits number of entries in history or favorites lists
-const limit = 30;
-/* unused harmony export limit */
-
-
-// Unit systems
-const unitSystems = {
-  metric: {
-    name: "metric",
-    code: "M",
-    temperatureUnit: "C",
-    velocityUnit: "m/s"
-  },
-  imperial: {
-    name: "imperial",
-    code: "I",
-    temperatureUnit: "F",
-    velocityUnit: "mph"
-  }
-};
-/* unused harmony export unitSystems */
+const LIMIT = 10;
+/* harmony export (immutable) */ __webpack_exports__["c"] = LIMIT;
 
 
 
@@ -311,12 +246,35 @@ const unitSystems = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(4);
+/** Class representing a list service. */
+class ListService {
+  /**
+   * Creates list service.
+   * @constructor
+   * @param {StorageService} storageSvc - StorageService object
+   * @param {string} name - name of the key in the local storage
+   */
+  constructor(storageSvc, name) {
+    this._storageService = storageSvc;
+    this._name = name;
+    this._data = this._storageService.read(this._name);
+    if (this._data == null) {
+      this._data = [];
+    }
+  }
 
+  /**
+   * Getter function for reading current data from the list
+   * @returns {[]} - current data
+   */
+  get data() {
+    console.log(`ListService. Getting ${this._name} data.`);
+    console.log(this._data);
+    return this._data;
+  }
+}
 
-const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */]({ host: document.getElementById("root") });
-app.update();
+/* harmony default export */ __webpack_exports__["a"] = (ListService);
 
 
 /***/ }),
@@ -324,19 +282,39 @@ app.update();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__App__ = __webpack_require__(5);
+
+
+const app = new __WEBPACK_IMPORTED_MODULE_0__App__["a" /* default */]({ host: document.getElementById("root") });
+app.update();
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_OtherDaysForecast__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_StorageService__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_FavoritesService__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_HistoryService__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_LocationSearch__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_Favorites__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_History__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_TodayForecast__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_OtherDaysForecast__ = __webpack_require__(14);
 // import * as config from "./src/utils/config";
 
 
 
-// import StorageService from "./src/services/StorageService";
-// import FavoritesService from "./src/services/FavoritesService";
-// import HistoryService from "./src/services/HistoryService";
+
+
+
+
+
 
 
 
@@ -346,28 +324,51 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     super();
 
     this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* parseLocation */](window.location.href) || "",
+      city: __WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* parseLocation */](window.location.href) || "",
+      favoritesList: null,
+      historyList: null,
       todayForecast: null,
       otherDaysForecast: null,
       isMetric: true,
       hasError: false
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit", "onSwitchUnits", "handleError");
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](
+      this, 
+      "onSearchSubmit", 
+      "onSwitchUnits", 
+      "handleError", 
+      "handleAddFavorite"
+    );
 
     this.host = host;
 
-    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__["a" /* default */]({
+    // initialize services
+    this.storageService = new __WEBPACK_IMPORTED_MODULE_3__services_StorageService__["a" /* default */](window);
+    this.favoritesService = new __WEBPACK_IMPORTED_MODULE_4__services_FavoritesService__["a" /* default */](this.storageService, "favorites");
+    this.historyService = new __WEBPACK_IMPORTED_MODULE_5__services_HistoryService__["a" /* default */](this.storageService, "history");
+
+    // get favorites and history lists
+    this.state.favoritesList = this.favoritesService.data;
+    this.state.historyList = this.historyService.data;
+
+    // initialize components
+    this.locationSearch = new __WEBPACK_IMPORTED_MODULE_6__components_LocationSearch__["a" /* default */]({
       city: this.state.city,
       onSubmit: this.onSearchSubmit,
       onSwitch: this.onSwitchUnits
     });
-    this.todayForecast = new __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__["a" /* default */]({
+    this.favorites = new __WEBPACK_IMPORTED_MODULE_7__components_Favorites__["a" /* default */]({});
+    this.history = new __WEBPACK_IMPORTED_MODULE_8__components_History__["a" /* default */]({});
+    this.todayForecast = new __WEBPACK_IMPORTED_MODULE_9__components_TodayForecast__["a" /* default */]({
       city: this.state.city,
-      forecast: this.state.todayForecast
+      forecast: this.state.todayForecast,
+      isMetric: this.isMetric,
+      onAddFavorite: this.handleAddFavorite
     });
-    this.otherDaysForecast = new __WEBPACK_IMPORTED_MODULE_5__components_OtherDaysForecast__["a" /* default */]({
-      forecast: this.state.otherDaysForecast
+    this.otherDaysForecast = new __WEBPACK_IMPORTED_MODULE_10__components_OtherDaysForecast__["a" /* default */]({
+      forecast: this.state.otherDaysForecast,
+      isMetric: this.isMetric
     });
   }
 
@@ -380,6 +381,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         hasError: false
       });
     });
+    this.historyService.add(city);
+    this.state.historyList = this.historyService.data;
+    this.history.update({ list: this.state.historyList });
   }
 
   onSwitchUnits() {
@@ -389,6 +393,10 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
   handleError() {
     this.state.hasError = true;
+  }
+
+  handleAddFavorite() {
+    console.log("Inside handleAddFavorite");
   }
 
   computeNextState(data) {
@@ -419,7 +427,14 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   }
 
   render() {
-    const { city, todayForecast, otherDaysForecast, isMetric } = this.state;
+    const { 
+      city, 
+      favoritesList,
+      historyList,
+      todayForecast, 
+      otherDaysForecast, 
+      isMetric 
+    } = this.state;
 
     return [
       this.locationSearch.update({
@@ -427,12 +442,15 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         onSubmit: this.onSearchSubmit,
         onSwitch: this.onSwitchUnits
       }),
+      this.favorites.update({ list: favoritesList }),
+      this.history.update({ list: historyList }),
       !todayForecast
         ? ""
         : this.todayForecast.update({
             city,
             forecast: todayForecast,
-            isMetric
+            isMetric,
+            onAddFavorite: this.handleAddFavorite
           }),
       !otherDaysForecast
         ? ""
@@ -448,7 +466,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -472,7 +490,7 @@ const init = {
 
 const getForecast = (loc) => {
   return fetch(
-    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${__WEBPACK_IMPORTED_MODULE_0__utils_config__["c" /* NUM_OF_DAYS */]}${UNITS_MOD}M${LOC_MOD}${loc}`,
+    `${BASE_URL}${KEY_MOD}${API_KEY}${DAYS_MOD}${__WEBPACK_IMPORTED_MODULE_0__utils_config__["d" /* NUM_OF_DAYS */]}${UNITS_MOD}M${LOC_MOD}${loc}`,
     init
   )
   .then(response => {
@@ -494,7 +512,159 @@ const getForecast = (loc) => {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/** Class representing a storage service. */
+class StorageService {
+  /**
+   * Creates storage service.
+   * @constructor
+   * @param {Window} wnd - current Window object
+   */
+  constructor(wnd) {
+    this.wnd = wnd;
+  }
+
+  /**
+   * Writes object to the local storage
+   * @param {Object} obj - object to add
+   * @param {string} name - name of the key
+   */
+  write(obj, name) {
+    const serialized = JSON.stringify(obj);
+    this.wnd.localStorage.setItem(name, serialized);
+  }
+
+  /**
+   * Reads object from the local storage
+   * @param {string} name - name of the key
+   */
+  read(name) {
+    return JSON.parse(this.wnd.localStorage.getItem(name));
+  }
+
+  /**
+   * Removes object from the local storage
+   * @param {string} name - name of the key
+   */
+  remove(name) {
+    this.wnd.localStorage.removeItem(name);
+  }
+
+  /**
+   * Clears local storage
+   */
+  clear() {
+    this.wnd.localStorage.clear();
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (StorageService);
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ListService__ = __webpack_require__(3);
+
+
+
+/** Class representing a favorites service. */
+class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* default */] {
+  constructor(storageSvc, name) {
+    super(storageSvc, name);
+  }
+
+  /**
+   * Adds item to the favorites list
+   * @param {string} item - item to add to the list
+   * @returns {boolean} true, if item was added, false - otherwise
+   */
+  add(item) {
+    // is there the same element?
+    for (let elem of this._data) {
+      if (elem == item) {
+        console.log("Item is already present.")
+        return false;
+      }
+    }
+    // check length limit
+    if (this._data.length === __WEBPACK_IMPORTED_MODULE_0__utils_config__["c" /* LIMIT */]) {
+      this._data.pop();
+    }
+    // add item
+    this._data.push(item);
+    this._data.sort();
+    this._storageService.write(this._data, this._name);
+    console.log("Favorites service. Adding favorite.");
+    console.log(this._data);
+    return true;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (FavoritesService);
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ListService__ = __webpack_require__(3);
+
+
+
+/** Class representing a history service. */
+class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* default */] {
+  constructor(storageSvc, name) {
+    super(storageSvc, name);
+  }
+
+  /**
+   * Adds item to the history list
+   * @param {string} item - item to add to the list
+   * @returns {boolean} true, if item was added, false - otherwise
+   */
+  add(item) {
+    // check first
+    if (item === this._data[0]) {
+      console.log("Such last entry already exists.");
+      return false;
+    }
+    // remove duplicates
+    if (this._data) {
+      const tmp = [];
+      for (let elem of this._data) {
+        if (elem != item) {
+          tmp.push(elem);
+        }
+      }
+      this._data = tmp;
+    }
+    // check length limit
+    if (this._data.length === __WEBPACK_IMPORTED_MODULE_0__utils_config__["c" /* LIMIT */]) {
+      this._data.pop();
+    }
+    // add item
+    this._data.unshift(item);
+    this._storageService.write(this.data, this.name);
+    console.log("History service. Adding history item.");
+    console.log(this._data);
+    return true;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (HistoryService);
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -517,7 +687,6 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
-
     this.host.addEventListener("click", this.handleClick);
   }
 
@@ -526,7 +695,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* isValidCityName */](city)) {
+    if (!__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isValidCityName */](city)) {
       this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
@@ -545,10 +714,23 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     const { city } = this.props;
 
     return `
-      <form class=${isValid ? "location-search" : "location-search -invalid"}>
-        <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
-        <button class="btn" type="submit">Find</button>
-        <button class="btn" id="units-btn" type="button">Units</button>
+      <form class="flex-container">
+        <div>
+          <input required class="btn" name="city" type="text" placeholder="City name" value="${city}">
+          <button class="btn btn-active" 
+            type="submit"
+            title="Searches location" 
+            aria-label="Search location">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button>
+        </div>
+        <button class="btn btn-active" 
+          id="units-btn" 
+          type="button" 
+          title="Selects metric or imperial units" 
+          aria-label="Switch units">
+            &deg;C/&deg;F
+        </button>
       </form>
     `;
   }
@@ -558,7 +740,86 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
 
 /***/ }),
-/* 7 */
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
+
+
+
+class Favorites extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+  constructor() {
+    super();
+
+    this.host = document.createElement("div");
+    this.host.classList.add("list-panel");
+  }
+
+  render() {
+    const { list } = this.props;
+
+    let items = "";
+
+    if (list) {
+      items = list
+      .map(
+        item => `&nbsp;<a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a>&nbsp;`
+      )
+      .join("");
+    }
+
+    return `
+      <i class="fa fa-star" aria-hidden="true"></i> ${items}&nbsp;
+    `;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Favorites);
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
+
+
+
+class History extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+  constructor() {
+    super();
+
+    this.host = document.createElement("div");
+    this.host.classList.add("list-panel");
+  }
+
+  render() {
+    const { list } = this.props;
+
+    let items = "";
+
+    if (list) {
+      items = list
+      .map(
+        item => `&nbsp;<a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a>&nbsp;`
+      )
+      .join("");
+    }
+
+    return `
+      <i class="fa fa-history" aria-hidden="true"></i> ${items}&nbsp;
+    `;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (History);
+
+/***/ }),
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -570,11 +831,22 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
 
 class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["a" /* default */] {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(this, "handleClick");
 
     this.host = document.createElement("div");
     this.host.classList.add("flex-container");
+
+    this.host.addEventListener("click", this.handleClick);
+  }
+
+  handleClick(ev) {
+    if (ev.target === document.getElementById("add-favorite-btn")) {
+      console.log("Inside handleClick add-favorite-btn");
+      this.props.onAddFavorite();
+    }
   }
 
   render() {
@@ -586,17 +858,23 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
     return `
       <div class="flex-container main-panel">
         <div class="left-panel">
+          <button class="btn btn-active" 
+            id="add-favorite-btn" 
+            title="Adds city to favorites" 
+            aria-label="Add favorite location">
+            <i class="fa fa-star" aria-hidden="true"></i>
+          </button>
           <h1 class="city-name">${city}</h1>
           <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
           <h3 class="date">${forecast.datetime}</h3>
           <p class="temperature">t: ${Math.round(
-            isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.temp)
+            isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.temp)
             )}&deg;${tempUnits}</p>
           <p class="min-temp">t.min: ${Math.round(
-            isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.min_temp)
+            isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.min_temp)
             )}&deg;${tempUnits}</p>
           <p class="max-temp">t.max: ${Math.round(
-            isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.max_temp)
+            isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.max_temp)
             )}&deg;${tempUnits}</p>
         </div>
         <div class="right-panel">
@@ -608,7 +886,7 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
           <h3>${forecast.weather.description}</h3>
           <p>Humidity: ${forecast.rh}%</p>
           <p>Wind: ${
-            isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toMph */])(forecast.wind_spd)
+            isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toMph */])(forecast.wind_spd)
             }${velocityUnits} ${forecast.wind_cdir}</p>
         </div>
       </div>
@@ -620,7 +898,7 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
 
 
 /***/ }),
-/* 8 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -657,7 +935,7 @@ class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component
           </div>
           <h4>${item.weather.description}</h4>
           <h2>t: ${Math.round(
-            isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(item.temp)
+            isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(item.temp)
           )}&deg;${tempUnits}</h2>
         </div>
     `

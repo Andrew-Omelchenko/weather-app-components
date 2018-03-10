@@ -7,11 +7,11 @@ class ListService {
    * @param {string} name - name of the key in the local storage
    */
   constructor(storageSvc, name) {
-    this.storageService = storageSvc;
-    this.name = name;
-    this.data = this.storageService.read(this.name);
-    if (this.data == null) {
-      this.data = [];
+    this._storageService = storageSvc;
+    this._name = name;
+    this._data = this._storageService.read(this._name);
+    if (this._data == null) {
+      this._data = [];
     }
   }
 
@@ -20,19 +20,9 @@ class ListService {
    * @returns {[]} - current data
    */
   get data() {
-    console.log(`ListService. Getting ${this.name} data.`);
-    console.log(this.data);
-    return this.data;
-  }
-
-  /**
-   * Clears data in the list
-   */
-  clear() {
-    this.storageService.remove(this.name);
-    this.data = [];
-    console.log(`ListService. Clearing ${this.name} data.`);
-    console.log(this.data);
+    console.log(`ListService. Getting ${this._name} data.`);
+    console.log(this._data);
+    return this._data;
   }
 }
 
