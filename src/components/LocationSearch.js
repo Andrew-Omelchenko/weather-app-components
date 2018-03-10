@@ -12,7 +12,7 @@ class LocationSearch extends Component {
     helper.bindAll(this, "handleSubmit", "handleClick");
 
     this.host = document.createElement("div");
-    this.host.classList.add("flex-container");
+    this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
     this.host.addEventListener("click", this.handleClick);

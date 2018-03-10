@@ -7,6 +7,7 @@ class OtherDaysForecast extends Component {
     super();
 
     this.host = document.createElement("div");
+    this.host.classList.add("container");
     this.host.classList.add("flex-container");
   }
 
@@ -31,9 +32,9 @@ class OtherDaysForecast extends Component {
             isMetric ? item.temp : toFahrenheit(item.temp)
           )}&deg;${tempUnits}</h2>
         </div>
-    `
-      )
-      .join("");
+      `
+    )
+    .join("");
   }
 }
 

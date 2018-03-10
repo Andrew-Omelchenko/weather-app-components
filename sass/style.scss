@@ -21,14 +21,14 @@ body {
 }
 
 @media screen and (max-width: 320px) {
-  .flex-container,
+  .container,
   .list-panel {
 		width: 320px;
 	}
 }
 
 @media screen and (min-width: 321px) {
-  .flex-container,
+  .container,
   .list-panel {
 		width: 320px;
 		margin-left: auto;
@@ -36,13 +36,7 @@ body {
 	}
 }
 
-.flex-container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	align-content: center;
-	align-items: center;
-  
+.container {
   .main-panel,
   .day-panel {
     background: $bg-color-main-panel;
@@ -109,7 +103,7 @@ body {
 	
 		&:hover,
 		&:focus {
-			transform: translate(-3px, -3px);
+			transform: translate(-2px, -2px);
 			box-shadow: 4px 4px 10px rgba(0, 0, 0, .5);
 		}
 	
@@ -118,4 +112,12 @@ body {
 			box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
 		}
 	}
+}
+
+.flex-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: center;
+	align-items: center;
 }

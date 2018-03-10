@@ -684,7 +684,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit", "handleClick");
 
     this.host = document.createElement("div");
-    this.host.classList.add("flex-container");
+    this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
     this.host.addEventListener("click", this.handleClick);
@@ -837,7 +837,7 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
     Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(this, "handleClick");
 
     this.host = document.createElement("div");
-    this.host.classList.add("flex-container");
+    this.host.classList.add("container");
 
     this.host.addEventListener("click", this.handleClick);
   }
@@ -856,38 +856,40 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
     const velocityUnits = isMetric ? "m/s" : "mph";
 
     return `
-      <div class="flex-container main-panel">
-        <div class="left-panel">
-          <button class="btn btn-active" 
-            id="add-favorite-btn" 
-            title="Adds city to favorites" 
-            aria-label="Add favorite location">
-            <i class="fa fa-star" aria-hidden="true"></i>
-          </button>
-          <h1 class="city-name">${city}</h1>
-          <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
-          <h3 class="date">${forecast.datetime}</h3>
-          <p class="temperature">t: ${Math.round(
-            isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.temp)
-            )}&deg;${tempUnits}</p>
-          <p class="min-temp">t.min: ${Math.round(
-            isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.min_temp)
-            )}&deg;${tempUnits}</p>
-          <p class="max-temp">t.max: ${Math.round(
-            isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.max_temp)
-            )}&deg;${tempUnits}</p>
-        </div>
-        <div class="right-panel">
-          <div class="img-container">
-            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_1__utils_config__["b" /* ICON_BASE */]}${
-              forecast.weather.icon
-              }.png" alt="Icon">
+      <div class="main-panel">
+        <button class="btn btn-active" 
+          id="add-favorite-btn" 
+          title="Adds city to favorites" 
+          aria-label="Add favorite location">
+          <i class="fa fa-star" aria-hidden="true"></i>
+        </button>
+        <h1 class="city-name">${city}</h1>
+        <div class="flex-container">
+          <div class="left-panel">
+            <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
+            <h3 class="date">${forecast.datetime}</h3>
+            <p class="temperature">t: ${Math.round(
+              isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.temp)
+              )}&deg;${tempUnits}</p>
+            <p class="min-temp">t.min: ${Math.round(
+              isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.min_temp)
+              )}&deg;${tempUnits}</p>
+            <p class="max-temp">t.max: ${Math.round(
+              isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.max_temp)
+              )}&deg;${tempUnits}</p>
           </div>
-          <h3>${forecast.weather.description}</h3>
-          <p>Humidity: ${forecast.rh}%</p>
-          <p>Wind: ${
-            isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toMph */])(forecast.wind_spd)
-            }${velocityUnits} ${forecast.wind_cdir}</p>
+          <div class="right-panel">
+            <div class="img-container">
+              <img class="img" src="${__WEBPACK_IMPORTED_MODULE_1__utils_config__["b" /* ICON_BASE */]}${
+                forecast.weather.icon
+                }.png" alt="Icon">
+            </div>
+            <h3>${forecast.weather.description}</h3>
+            <p>Humidity: ${forecast.rh}%</p>
+            <p>Wind: ${
+              isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toMph */])(forecast.wind_spd)
+              }${velocityUnits} ${forecast.wind_cdir}</p>
+          </div>
         </div>
       </div>
     `;
@@ -914,6 +916,7 @@ class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component
     super();
 
     this.host = document.createElement("div");
+    this.host.classList.add("container");
     this.host.classList.add("flex-container");
   }
 
@@ -938,9 +941,9 @@ class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component
             isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(item.temp)
           )}&deg;${tempUnits}</h2>
         </div>
-    `
-      )
-      .join("");
+      `
+    )
+    .join("");
   }
 }
 
