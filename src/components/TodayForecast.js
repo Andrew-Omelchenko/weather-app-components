@@ -40,9 +40,9 @@ class TodayForecast extends Component {
           <div class="left-panel">
             <h2>${DAY_OF_WEEK[new Date(forecast.datetime).getDay()]}</h2>
             <h3 class="date">${forecast.datetime}</h3>
-            <p class="temperature">t: ${Math.round(
+            <h1 class="temperature">t: ${Math.round(
               isMetric ? forecast.temp : toFahrenheit(forecast.temp)
-              )}&deg;${tempUnits}</p>
+              )}&deg;${tempUnits}</h1>
             <p class="min-temp">t.min: ${Math.round(
               isMetric ? forecast.min_temp : toFahrenheit(forecast.min_temp)
               )}&deg;${tempUnits}</p>

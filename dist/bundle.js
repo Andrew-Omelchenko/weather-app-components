@@ -863,9 +863,9 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
           <div class="left-panel">
             <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
             <h3 class="date">${forecast.datetime}</h3>
-            <p class="temperature">t: ${Math.round(
+            <h1 class="temperature">t: ${Math.round(
               isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.temp)
-              )}&deg;${tempUnits}</p>
+              )}&deg;${tempUnits}</h1>
             <p class="min-temp">t.min: ${Math.round(
               isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.min_temp)
               )}&deg;${tempUnits}</p>

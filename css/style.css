@@ -32,38 +32,39 @@ body {
   text-align: justify;
   padding: 5px; }
 
-.container .main-panel,
-.container .day-panel {
-  background: skyblue;
-  border: 1px solid gray;
-  line-height: 1.5;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); }
-
-.container .main-panel {
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px; }
-  .container .main-panel .left-panel,
-  .container .main-panel .right-panel {
-    flex-direction: column; }
-  .container .main-panel .left-panel {
-    width: 70%;
-    align-content: left;
-    align-items: left;
-    text-align: left; }
-  .container .main-panel .right-panel {
+.container {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+  .container .main-panel,
+  .container .day-panel {
+    background: skyblue;
+    border: 1px solid gray;
+    line-height: 1.5;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); }
+  .container .main-panel {
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px; }
+    .container .main-panel .left-panel,
+    .container .main-panel .right-panel {
+      flex-direction: column; }
+    .container .main-panel .left-panel {
+      width: 70%;
+      align-content: left;
+      align-items: left;
+      text-align: left; }
+    .container .main-panel .right-panel {
+      width: 30%;
+      align-content: right;
+      align-items: right;
+      text-align: right; }
+  .container .day-panel {
     width: 30%;
-    align-content: right;
-    align-items: right;
-    text-align: right; }
-
-.container .day-panel {
-  width: 30%;
-  padding: 5px;
-  border-radius: 5px;
-  font-weight: bold;
-  margin: 7px 0 7px 0;
-  text-align: center; }
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 7px 0 7px 0;
+    text-align: center; }
 
 .img-container,
 .img {
@@ -94,3 +95,7 @@ body {
   justify-content: space-between;
   align-content: center;
   align-items: center; }
+
+.fa-star,
+.fa-history {
+  color: gold; }

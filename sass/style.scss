@@ -43,6 +43,9 @@ body {
 }
 
 .container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  
   .main-panel,
   .day-panel {
     background: $bg-color-main-panel;
@@ -126,4 +129,9 @@ body {
 	justify-content: space-between;
 	align-content: center;
 	align-items: center;
+}
+
+.fa-star,
+.fa-history {
+  color: $fg-color-sign;
 }
