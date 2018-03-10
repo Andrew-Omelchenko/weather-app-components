@@ -27,6 +27,11 @@ body {
     margin-left: auto;
     margin-right: auto; } }
 
+.list-panel {
+  font-size: 10pt;
+  text-align: justify;
+  padding: 5px; }
+
 .container .main-panel,
 .container .day-panel {
   background: skyblue;

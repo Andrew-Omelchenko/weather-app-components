@@ -17,13 +17,13 @@ class Favorites extends Component {
     if (list) {
       items = list
       .map(
-        item => `&nbsp;<a href="${extractBase(window.location.href)}?city=${item}">${item}</a>&nbsp;`
+        item => ` <a href="${extractBase(window.location.href)}?city=${item}">${item}</a> `
       )
       .join("");
     }
 
     return `
-      <i class="fa fa-star" aria-hidden="true"></i> ${items}&nbsp;
+      <i class="fa fa-star" aria-hidden="true"></i> ${items} 
     `;
   }
 }

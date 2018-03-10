@@ -760,13 +760,13 @@ class Favorites extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /
     if (list) {
       items = list
       .map(
-        item => `&nbsp;<a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a>&nbsp;`
+        item => ` <a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a> `
       )
       .join("");
     }
 
     return `
-      <i class="fa fa-star" aria-hidden="true"></i> ${items}&nbsp;
+      <i class="fa fa-star" aria-hidden="true"></i> ${items} 
     `;
   }
 }
@@ -800,13 +800,13 @@ class History extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* 
     if (list) {
       items = list
       .map(
-        item => `&nbsp;<a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a>&nbsp;`
+        item => ` <a href="${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${item}">${item}</a> `
       )
       .join("");
     }
 
     return `
-      <i class="fa fa-history" aria-hidden="true"></i> ${items}&nbsp;
+      <i class="fa fa-history" aria-hidden="true"></i> ${items} 
     `;
   }
 }
