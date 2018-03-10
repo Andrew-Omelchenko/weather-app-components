@@ -9,12 +9,14 @@ class LocationSearch extends Component {
       isValid: true
     };
 
-    helper.bindAll(this, "handleSubmit");
+    helper.bindAll(this, "handleSubmit", "handleClick");
 
     this.host = document.createElement("div");
     this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
+
+    this.host.addEventListener("click", this.handleClick);
   }
 
   handleSubmit(ev) {
@@ -31,6 +33,12 @@ class LocationSearch extends Component {
     console.log(this.state, this.props);
   }
 
+  handleClick(ev) {
+    if (ev.target === document.getElementById("units-btn")) {
+      this.props.onSwitch();
+    }
+  }
+
   render() {
     const { isValid } = this.state;
     const { city } = this.props;
@@ -38,7 +46,8 @@ class LocationSearch extends Component {
     return `
       <form class=${isValid ? "location-search" : "location-search -invalid"}>
         <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
-        <button class="btn">Find</button>
+        <button class="btn" type="submit">Find</button>
+        <button class="btn" id="units-btn" type="button">Units</button>
       </form>
     `;
   }

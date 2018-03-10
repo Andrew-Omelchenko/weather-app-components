@@ -68,65 +68,12 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
-
-
-class Component {
-  constructor(props) {
-    this.state = {};
-    this.props = props || {};
-    this.host = null;
-
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "updateState", "update");
-  }
-
-  _render() {
-    const children = this.render();
-
-    this.host.innerHTML = "";
-
-    if (typeof children === "string") {
-      this.host.innerHTML = children;
-    } else if (Array.isArray(children)) {
-      this.host.append(... children);
-    } else {
-      this.host.append(children);
-    }
-
-    return this.host;
-  }
-
-  update(nextProps) {
-    this.props = nextProps;
-    return this._render();
-  }
-
-  updateState(state) {
-    const nextState = Object.assign({}, this.state, state);
-
-    this.state = nextState;
-    this._render();
-
-    return nextState;
-  }
-
-  render() {}
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (Component);
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = isValidCityName;
 /* unused harmony export extractBase */
 /* harmony export (immutable) */ __webpack_exports__["c"] = parseLocation;
-/* unused harmony export toFahrenheit */
+/* harmony export (immutable) */ __webpack_exports__["d"] = toFahrenheit;
 /* unused harmony export toCelsius */
-/* unused harmony export toMph */
+/* harmony export (immutable) */ __webpack_exports__["e"] = toMph;
 /* unused harmony export toMs */
 /* unused harmony export clearSelect */
 /* unused harmony export populateSelect */
@@ -255,6 +202,59 @@ function addFavoriteLocation(doc, controller, favListId) {
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+
+
+class Component {
+  constructor(props) {
+    this.state = {};
+    this.props = props || {};
+    this.host = null;
+
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "updateState", "update");
+  }
+
+  _render() {
+    const children = this.render();
+
+    this.host.innerHTML = "";
+
+    if (typeof children === "string") {
+      this.host.innerHTML = children;
+    } else if (Array.isArray(children)) {
+      this.host.append(... children);
+    } else {
+      this.host.append(children);
+    }
+
+    return this.host;
+  }
+
+  update(nextProps) {
+    this.props = nextProps;
+    return this._render();
+  }
+
+  updateState(state) {
+    const nextState = Object.assign({}, this.state, state);
+
+    this.state = nextState;
+    this._render();
+
+    return nextState;
+  }
+
+  render() {}
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (Component);
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -324,8 +324,8 @@ app.update();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_api__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__ = __webpack_require__(7);
@@ -349,18 +349,22 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       city: __WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* parseLocation */](window.location.href) || "",
       todayForecast: null,
       otherDaysForecast: null,
+      isMetric: true,
       hasError: false
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit");
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "onSearchSubmit", "onSwitchUnits");
 
     this.host = host;
 
     this.locationSearch = new __WEBPACK_IMPORTED_MODULE_3__components_LocationSearch__["a" /* default */]({
-      city: this.state.city, onSubmit: this.onSearchSubmit
+      city: this.state.city,
+      onSubmit: this.onSearchSubmit,
+      onSwitch: this.onSwitchUnits
     });
     this.todayForecast = new __WEBPACK_IMPORTED_MODULE_4__components_TodayForecast__["a" /* default */]({
-      city: this.state.city, forecast: this.state.todayForecast
+      city: this.state.city,
+      forecast: this.state.todayForecast
     });
     this.otherDaysForecast = new __WEBPACK_IMPORTED_MODULE_5__components_OtherDaysForecast__["a" /* default */]({
       forecast: this.state.otherDaysForecast
@@ -373,8 +377,13 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         todayForecast,
         otherDaysForecast,
         city
-      })
+      });
     });
+  }
+
+  onSwitchUnits() {
+    this.state.isMetric = !this.state.isMetric;
+    this.render();
   }
 
   handleError() {
@@ -398,14 +407,29 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   }
 
   render() {
-    const  { city, todayForecast, otherDaysForecast } = this.state;
+    const { city, todayForecast, otherDaysForecast, isMetric } = this.state;
 
     console.log(this.state);
 
     return [
-      this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }),
-      !todayForecast ? "" : this.todayForecast.update({ city, forecast: todayForecast }),
-      !otherDaysForecast ? "" : this.otherDaysForecast.update({ forecast: otherDaysForecast })
+      this.locationSearch.update({
+        city,
+        onSubmit: this.onSearchSubmit,
+        onSwitch: this.onSwitchUnits
+      }),
+      !todayForecast
+        ? ""
+        : this.todayForecast.update({
+            city,
+            forecast: todayForecast,
+            isMetric
+          }),
+      !otherDaysForecast
+        ? ""
+        : this.otherDaysForecast.update({
+            forecast: otherDaysForecast,
+            isMetric
+          })
     ];
   }
 }
@@ -465,8 +489,8 @@ const getForecast = (loc) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(1);
 
 
 
@@ -478,12 +502,14 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
       isValid: true
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit");
+    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit", "handleClick");
 
     this.host = document.createElement("div");
     this.host.classList.add("flex-container");
 
     this.host.addEventListener("submit", this.handleSubmit);
+
+    this.host.addEventListener("click", this.handleClick);
   }
 
   handleSubmit(ev) {
@@ -500,6 +526,12 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     console.log(this.state, this.props);
   }
 
+  handleClick(ev) {
+    if (ev.target === document.getElementById("units-btn")) {
+      this.props.onSwitch();
+    }
+  }
+
   render() {
     const { isValid } = this.state;
     const { city } = this.props;
@@ -507,7 +539,8 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     return `
       <form class=${isValid ? "location-search" : "location-search -invalid"}>
         <input required name="city" type="text" placeholder="City name" class="btn" value="${city}">
-        <button class="btn">Find</button>
+        <button class="btn" type="submit">Find</button>
+        <button class="btn" id="units-btn" type="button">Units</button>
       </form>
     `;
   }
@@ -521,12 +554,14 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__framework_Component__ = __webpack_require__(1);
 
 
 
-class TodayForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+
+class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["a" /* default */] {
   constructor() {
     super();
 
@@ -535,7 +570,10 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["
   }
 
   render() {
-    const { city, forecast } = this.props;
+    const { city, forecast, isMetric } = this.props;
+
+    const tempUnits = isMetric ? "C" : "F";
+    const velocityUnits = isMetric ? "m/s" : "mph";
 
     console.log(city, forecast);
 
@@ -543,19 +581,29 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["
       <div class="flex-container main-panel">
         <div class="left-panel">
           <h1 class="city-name">${city}</h1>
-          <h2>${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
+          <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
           <h3 class="date">${forecast.datetime}</h3>
-          <p class="temperature">t: ${Math.round(forecast.temp)}&deg;</p>
-          <p class="min-temp">t.min: ${Math.round(forecast.min_temp)}&deg;</p>
-          <p class="max-temp">t.max: ${Math.round(forecast.max_temp)}&deg;</p>
+          <p class="temperature">t: ${Math.round(
+            isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.temp)
+          )}&deg;${tempUnits}</p>
+          <p class="min-temp">t.min: ${Math.round(
+            isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.min_temp)
+          )}&deg;${tempUnits}</p>
+          <p class="max-temp">t.max: ${Math.round(
+            isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(forecast.max_temp)
+          )}&deg;${tempUnits}</p>
         </div>
         <div class="right-panel">
           <div class="img-container">
-            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_0__utils_config__["b" /* ICON_BASE */]}${forecast.weather.icon}.png" alt="Icon">
+            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_1__utils_config__["b" /* ICON_BASE */]}${
+      forecast.weather.icon
+    }.png" alt="Icon">
           </div>
           <h3>${forecast.weather.description}</h3>
           <p>Humidity: ${forecast.rh}%</p>
-          <p>Wind: ${forecast.wind_spd}m/s ${forecast.wind_cdir}</p>
+          <p>Wind: ${
+            isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toMph */])(forecast.wind_spd)
+          }${velocityUnits} ${forecast.wind_cdir}</p>
         </div>
       </div>
     `;
@@ -564,17 +612,20 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["
 
 /* harmony default export */ __webpack_exports__["a"] = (TodayForecast);
 
+
 /***/ }),
 /* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_config__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__framework_Component__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_helper__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_config__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__framework_Component__ = __webpack_require__(1);
 
 
 
-class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* default */] {
+
+class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["a" /* default */] {
   constructor() {
     super();
 
@@ -583,21 +634,29 @@ class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_1__framework_Component
   }
 
   render() {
-    const { forecast } = this.props;
+    const { forecast, isMetric } = this.props;
+
+    const tempUnits = isMetric ? "C" : "F";
 
     return forecast
-    .map(item => `
+      .map(
+        item => `
         <div class="day-panel">
-          <h2>${__WEBPACK_IMPORTED_MODULE_0__utils_config__["a" /* DAY_OF_WEEK */][new Date(item.datetime).getDay()]}</h2>
+          <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(item.datetime).getDay()]}</h2>
           <h3 class="date">${item.datetime}</h3>
           <div class="img-container">
-            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_0__utils_config__["b" /* ICON_BASE */]}${item.weather.icon}.png" alt="Icon">
+            <img class="img" src="${__WEBPACK_IMPORTED_MODULE_1__utils_config__["b" /* ICON_BASE */]}${
+          item.weather.icon
+        }.png" alt="Icon">
           </div>
           <h4>${item.weather.description}</h4>
-          <h2>t: ${Math.round(item.temp)}&deg;</h2>
+          <h2>t: ${Math.round(
+            isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* toFahrenheit */])(item.temp)
+          )}&deg;${tempUnits}</h2>
         </div>
-    `)
-    .join("");
+    `
+      )
+      .join("");
   }
 }
 

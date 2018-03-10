@@ -17,18 +17,22 @@ class App extends Component {
       city: helper.parseLocation(window.location.href) || "",
       todayForecast: null,
       otherDaysForecast: null,
+      isMetric: true,
       hasError: false
     };
 
-    helper.bindAll(this, "onSearchSubmit");
+    helper.bindAll(this, "onSearchSubmit", "onSwitchUnits");
 
     this.host = host;
 
     this.locationSearch = new LocationSearch({
-      city: this.state.city, onSubmit: this.onSearchSubmit
+      city: this.state.city,
+      onSubmit: this.onSearchSubmit,
+      onSwitch: this.onSwitchUnits
     });
     this.todayForecast = new TodayForecast({
-      city: this.state.city, forecast: this.state.todayForecast
+      city: this.state.city,
+      forecast: this.state.todayForecast
     });
     this.otherDaysForecast = new OtherDaysForecast({
       forecast: this.state.otherDaysForecast
@@ -41,8 +45,13 @@ class App extends Component {
         todayForecast,
         otherDaysForecast,
         city
-      })
+      });
     });
+  }
+
+  onSwitchUnits() {
+    this.state.isMetric = !this.state.isMetric;
+    this.render();
   }
 
   handleError() {
@@ -66,14 +75,29 @@ class App extends Component {
   }
 
   render() {
-    const  { city, todayForecast, otherDaysForecast } = this.state;
+    const { city, todayForecast, otherDaysForecast, isMetric } = this.state;
 
     console.log(this.state);
 
     return [
-      this.locationSearch.update({ city, onSubmit: this.onSearchSubmit }),
-      !todayForecast ? "" : this.todayForecast.update({ city, forecast: todayForecast }),
-      !otherDaysForecast ? "" : this.otherDaysForecast.update({ forecast: otherDaysForecast })
+      this.locationSearch.update({
+        city,
+        onSubmit: this.onSearchSubmit,
+        onSwitch: this.onSwitchUnits
+      }),
+      !todayForecast
+        ? ""
+        : this.todayForecast.update({
+            city,
+            forecast: todayForecast,
+            isMetric
+          }),
+      !otherDaysForecast
+        ? ""
+        : this.otherDaysForecast.update({
+            forecast: otherDaysForecast,
+            isMetric
+          })
     ];
   }
 }
