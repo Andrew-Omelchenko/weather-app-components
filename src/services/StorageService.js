@@ -5,8 +5,7 @@ class StorageService {
    * @constructor
    * @param {Window} wnd - current Window object
    */
-  constructor(wnd) {
-    this.wnd = wnd;
+  constructor() {
   }
 
   /**
@@ -16,7 +15,7 @@ class StorageService {
    */
   write(obj, name) {
     const serialized = JSON.stringify(obj);
-    this.wnd.localStorage.setItem(name, serialized);
+    window.localStorage.setItem(name, serialized);
   }
 
   /**
@@ -24,7 +23,7 @@ class StorageService {
    * @param {string} name - name of the key
    */
   read(name) {
-    return JSON.parse(this.wnd.localStorage.getItem(name));
+    return JSON.parse(window.localStorage.getItem(name));
   }
 
   /**
@@ -32,14 +31,14 @@ class StorageService {
    * @param {string} name - name of the key
    */
   remove(name) {
-    this.wnd.localStorage.removeItem(name);
+    window.localStorage.removeItem(name);
   }
 
   /**
    * Clears local storage
    */
   clear() {
-    this.wnd.localStorage.clear();
+    window.localStorage.clear();
   }
 }
 

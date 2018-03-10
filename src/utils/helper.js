@@ -50,27 +50,3 @@ export function toFahrenheit(value) {
 export function toMph(value) {
   return Math.round(value * 2.25);
 }
-
-/**
- * Populates <select> html element with child elements
- * @param {Document} doc - current Document object
- * @param {HTMLElementObject} selectId - html element
- * @param {[]]} data - data to insert
- * @param {string} direction - in "normal" or "reverse" direction
- */
-export function populateSelect(doc, selectId, data, direction) {
-  let opt = null;
-  if (direction === "normal") {
-    for (let elem of data) {
-      opt = doc.createElement("option");
-      opt.value = elem;
-      selectId.appendChild(opt);
-    }
-  } else if (direction == "reverse") {
-    for (let i = data.length - 1; i >= 0; i--) {
-      opt = doc.createElement("option");
-      opt.value = data[i];
-      selectId.appendChild(opt);
-    }
-  }
-}

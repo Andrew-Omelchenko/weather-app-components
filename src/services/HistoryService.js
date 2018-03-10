@@ -3,8 +3,13 @@ import ListService from "./ListService";
 
 /** Class representing a history service. */
 class HistoryService extends ListService {
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
+  /**
+   * Creates history service.
+   * @constructor
+   * @param {StorageService} storageSvc - StorageService object
+   */
+  constructor(storageSvc) {
+    super(storageSvc, "history");
   }
 
   /**
@@ -34,9 +39,7 @@ class HistoryService extends ListService {
     }
     // add item
     this._data.unshift(item);
-    this._storageService.write(this.data, this.name);
-    console.log("History service. Adding history item.");
-    console.log(this._data);
+    this._storageService.write(this._data, "history");
     return true;
   }
 }

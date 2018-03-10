@@ -73,7 +73,6 @@
 /* harmony export (immutable) */ __webpack_exports__["d"] = parseLocation;
 /* harmony export (immutable) */ __webpack_exports__["e"] = toFahrenheit;
 /* harmony export (immutable) */ __webpack_exports__["f"] = toMph;
-/* unused harmony export populateSelect */
 const bindAll = (context, ...names) => {
   names.forEach(name => {
     if (typeof context[name] === "function") {
@@ -127,30 +126,6 @@ function toFahrenheit(value) {
  */
 function toMph(value) {
   return Math.round(value * 2.25);
-}
-
-/**
- * Populates <select> html element with child elements
- * @param {Document} doc - current Document object
- * @param {HTMLElementObject} selectId - html element
- * @param {[]]} data - data to insert
- * @param {string} direction - in "normal" or "reverse" direction
- */
-function populateSelect(doc, selectId, data, direction) {
-  let opt = null;
-  if (direction === "normal") {
-    for (let elem of data) {
-      opt = doc.createElement("option");
-      opt.value = elem;
-      selectId.appendChild(opt);
-    }
-  } else if (direction == "reverse") {
-    for (let i = data.length - 1; i >= 0; i--) {
-      opt = doc.createElement("option");
-      opt.value = data[i];
-      selectId.appendChild(opt);
-    }
-  }
 }
 
 
@@ -258,6 +233,8 @@ class ListService {
     this._storageService = storageSvc;
     this._name = name;
     this._data = this._storageService.read(this._name);
+    console.log(`ListService constructor. Getting ${this._name} data.`);
+    console.log(this._data);
     if (this._data == null) {
       this._data = [];
     }
@@ -306,7 +283,6 @@ app.update();
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_History__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_TodayForecast__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_OtherDaysForecast__ = __webpack_require__(14);
-// import * as config from "./src/utils/config";
 
 
 
@@ -323,17 +299,22 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   constructor({ host }) {
     super();
 
+    // initialize services
+    this.storageService = new __WEBPACK_IMPORTED_MODULE_3__services_StorageService__["a" /* default */]();
+    this.favoritesService = new __WEBPACK_IMPORTED_MODULE_4__services_FavoritesService__["a" /* default */](this.storageService);
+    this.historyService = new __WEBPACK_IMPORTED_MODULE_5__services_HistoryService__["a" /* default */](this.storageService);
+
     this.state = {
-      city: __WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* parseLocation */](window.location.href) || "",
-      favoritesList: null,
-      historyList: null,
+      city: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* parseLocation */])(window.location.href) || "",
+      favoritesList: this.favoritesService.data,
+      historyList: this.historyService.data,
       todayForecast: null,
       otherDaysForecast: null,
       isMetric: true,
       hasError: false
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](
+    Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(
       this, 
       "onSearchSubmit", 
       "onSwitchUnits", 
@@ -342,15 +323,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     );
 
     this.host = host;
-
-    // initialize services
-    this.storageService = new __WEBPACK_IMPORTED_MODULE_3__services_StorageService__["a" /* default */](window);
-    this.favoritesService = new __WEBPACK_IMPORTED_MODULE_4__services_FavoritesService__["a" /* default */](this.storageService, "favorites");
-    this.historyService = new __WEBPACK_IMPORTED_MODULE_5__services_HistoryService__["a" /* default */](this.storageService, "history");
-
-    // get favorites and history lists
-    this.state.favoritesList = this.favoritesService.data;
-    this.state.historyList = this.historyService.data;
 
     // initialize components
     this.locationSearch = new __WEBPACK_IMPORTED_MODULE_6__components_LocationSearch__["a" /* default */]({
@@ -370,6 +342,8 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       forecast: this.state.otherDaysForecast,
       isMetric: this.isMetric
     });
+
+    this.updateState(this.state);
   }
 
   onSearchSubmit(city) {
@@ -381,9 +355,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         hasError: false
       });
     });
-    this.historyService.add(city);
-    this.state.historyList = this.historyService.data;
-    this.history.update({ list: this.state.historyList });
   }
 
   onSwitchUnits() {
@@ -422,6 +393,22 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
   getCityForecast(city) {
     return Object(__WEBPACK_IMPORTED_MODULE_2__utils_api__["a" /* default */])(city)
+      .then(data => {
+        if (!data) {
+          return;
+        }
+        const loc = `${data.city_name},${data.country_code}`;
+        // changes history state
+        window.history.pushState(
+          {},
+          document.title,
+          `${Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["b" /* extractBase */])(window.location.href)}?city=${loc}`
+        );
+        // adds city to history list
+        this.historyService.add(loc);
+        this.state.historyList = this.historyService.data;
+        return data;
+      })
       .then(this.computeNextState)
       .catch(this.handleError);
   }
@@ -523,8 +510,7 @@ class StorageService {
    * @constructor
    * @param {Window} wnd - current Window object
    */
-  constructor(wnd) {
-    this.wnd = wnd;
+  constructor() {
   }
 
   /**
@@ -534,7 +520,7 @@ class StorageService {
    */
   write(obj, name) {
     const serialized = JSON.stringify(obj);
-    this.wnd.localStorage.setItem(name, serialized);
+    window.localStorage.setItem(name, serialized);
   }
 
   /**
@@ -542,7 +528,7 @@ class StorageService {
    * @param {string} name - name of the key
    */
   read(name) {
-    return JSON.parse(this.wnd.localStorage.getItem(name));
+    return JSON.parse(window.localStorage.getItem(name));
   }
 
   /**
@@ -550,14 +536,14 @@ class StorageService {
    * @param {string} name - name of the key
    */
   remove(name) {
-    this.wnd.localStorage.removeItem(name);
+    window.localStorage.removeItem(name);
   }
 
   /**
    * Clears local storage
    */
   clear() {
-    this.wnd.localStorage.clear();
+    window.localStorage.clear();
   }
 }
 
@@ -576,8 +562,13 @@ class StorageService {
 
 /** Class representing a favorites service. */
 class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* default */] {
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
+  /**
+   * Creates favorites service.
+   * @constructor
+   * @param {StorageService} storageSvc - StorageService object
+   */
+  constructor(storageSvc) {
+    super(storageSvc, "favorites");
   }
 
   /**
@@ -600,9 +591,7 @@ class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /*
     // add item
     this._data.push(item);
     this._data.sort();
-    this._storageService.write(this._data, this._name);
-    console.log("Favorites service. Adding favorite.");
-    console.log(this._data);
+    this._storageService.write(this._data, "favorites");
     return true;
   }
 }
@@ -622,8 +611,13 @@ class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /*
 
 /** Class representing a history service. */
 class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* default */] {
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
+  /**
+   * Creates history service.
+   * @constructor
+   * @param {StorageService} storageSvc - StorageService object
+   */
+  constructor(storageSvc) {
+    super(storageSvc, "history");
   }
 
   /**
@@ -653,9 +647,7 @@ class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* d
     }
     // add item
     this._data.unshift(item);
-    this._storageService.write(this.data, this.name);
-    console.log("History service. Adding history item.");
-    console.log(this._data);
+    this._storageService.write(this._data, "history");
     return true;
   }
 }

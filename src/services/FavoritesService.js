@@ -3,8 +3,13 @@ import ListService from "./ListService";
 
 /** Class representing a favorites service. */
 class FavoritesService extends ListService {
-  constructor(storageSvc, name) {
-    super(storageSvc, name);
+  /**
+   * Creates favorites service.
+   * @constructor
+   * @param {StorageService} storageSvc - StorageService object
+   */
+  constructor(storageSvc) {
+    super(storageSvc, "favorites");
   }
 
   /**
@@ -27,9 +32,7 @@ class FavoritesService extends ListService {
     // add item
     this._data.push(item);
     this._data.sort();
-    this._storageService.write(this._data, this._name);
-    console.log("Favorites service. Adding favorite.");
-    console.log(this._data);
+    this._storageService.write(this._data, "favorites");
     return true;
   }
 }

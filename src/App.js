@@ -1,5 +1,4 @@
-// import * as config from "./src/utils/config";
-import * as helper from "./utils/helper";
+import { bindAll, extractBase, parseLocation } from "./utils/helper";
 import Component from "./framework/Component";
 import getForecast from "./utils/api";
 import StorageService from "./services/StorageService";
@@ -15,17 +14,22 @@ class App extends Component {
   constructor({ host }) {
     super();
 
+    // initialize services
+    this.storageService = new StorageService();
+    this.favoritesService = new FavoritesService(this.storageService);
+    this.historyService = new HistoryService(this.storageService);
+
     this.state = {
-      city: helper.parseLocation(window.location.href) || "",
-      favoritesList: null,
-      historyList: null,
+      city: parseLocation(window.location.href) || "",
+      favoritesList: this.favoritesService.data,
+      historyList: this.historyService.data,
       todayForecast: null,
       otherDaysForecast: null,
       isMetric: true,
       hasError: false
     };
 
-    helper.bindAll(
+    bindAll(
       this, 
       "onSearchSubmit", 
       "onSwitchUnits", 
@@ -34,15 +38,6 @@ class App extends Component {
     );
 
     this.host = host;
-
-    // initialize services
-    this.storageService = new StorageService(window);
-    this.favoritesService = new FavoritesService(this.storageService, "favorites");
-    this.historyService = new HistoryService(this.storageService, "history");
-
-    // get favorites and history lists
-    this.state.favoritesList = this.favoritesService.data;
-    this.state.historyList = this.historyService.data;
 
     // initialize components
     this.locationSearch = new LocationSearch({
@@ -62,6 +57,8 @@ class App extends Component {
       forecast: this.state.otherDaysForecast,
       isMetric: this.isMetric
     });
+
+    this.updateState(this.state);
   }
 
   onSearchSubmit(city) {
@@ -73,9 +70,6 @@ class App extends Component {
         hasError: false
       });
     });
-    this.historyService.add(city);
-    this.state.historyList = this.historyService.data;
-    this.history.update({ list: this.state.historyList });
   }
 
   onSwitchUnits() {
@@ -114,6 +108,22 @@ class App extends Component {
 
   getCityForecast(city) {
     return getForecast(city)
+      .then(data => {
+        if (!data) {
+          return;
+        }
+        const loc = `${data.city_name},${data.country_code}`;
+        // changes history state
+        window.history.pushState(
+          {},
+          document.title,
+          `${extractBase(window.location.href)}?city=${loc}`
+        );
+        // adds city to history list
+        this.historyService.add(loc);
+        this.state.historyList = this.historyService.data;
+        return data;
+      })
       .then(this.computeNextState)
       .catch(this.handleError);
   }
