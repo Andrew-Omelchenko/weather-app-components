@@ -372,11 +372,12 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   }
 
   onSearchSubmit(city) {
-    this.getCityForecast(city).then(({ todayForecast, otherDaysForecast }) => {
+    this.getCityForecast(city).then(({ loc, todayForecast, otherDaysForecast }) => {
       this.updateState({
+        city: loc,
         todayForecast,
         otherDaysForecast,
-        city
+        hasError: false
       });
     });
   }
@@ -393,15 +394,18 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
   computeNextState(data) {
     if (!data) {
       return {
+        loc: "",
         todayForecast: null,
         otherDaysForecast: null
       };
     } else {
+      const loc = `${data.city_name},${data.country_code}`;
       const arr = data.data;
       const today = arr.shift();
       const otherDays = arr;
 
       return {
+        loc,
         todayForecast: today,
         otherDaysForecast: otherDays
       };
