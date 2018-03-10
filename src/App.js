@@ -19,6 +19,7 @@ class App extends Component {
     this.favoritesService = new FavoritesService(this.storageService);
     this.historyService = new HistoryService(this.storageService);
 
+    // initialize state object
     this.state = {
       city: parseLocation(window.location.href) || "",
       favoritesList: this.favoritesService.data,
@@ -58,7 +59,9 @@ class App extends Component {
       isMetric: this.isMetric
     });
 
-    this.updateState(this.state);
+    if (this.state.city !== "") {
+      this.onSearchSubmit(this.state.city);
+    }
   }
 
   onSearchSubmit(city) {

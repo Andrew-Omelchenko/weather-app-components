@@ -304,6 +304,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     this.favoritesService = new __WEBPACK_IMPORTED_MODULE_4__services_FavoritesService__["a" /* default */](this.storageService);
     this.historyService = new __WEBPACK_IMPORTED_MODULE_5__services_HistoryService__["a" /* default */](this.storageService);
 
+    // initialize state object
     this.state = {
       city: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* parseLocation */])(window.location.href) || "",
       favoritesList: this.favoritesService.data,
@@ -343,7 +344,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       isMetric: this.isMetric
     });
 
-    this.updateState(this.state);
+    if (this.state.city !== "") {
+      this.onSearchSubmit(this.state.city);
+    }
   }
 
   onSearchSubmit(city) {
