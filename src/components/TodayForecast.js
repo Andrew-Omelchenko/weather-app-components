@@ -18,12 +18,6 @@ class TodayForecast extends Component {
 
     return `
       <div class="main-panel">
-        <button class="btn btn-active" 
-          id="add-favorite-btn" 
-          title="Adds city to favorites" 
-          aria-label="Add favorite location">
-          <i class="fa fa-star" aria-hidden="true"></i>
-        </button>
         <h1 class="city-name">${city}</h1>
         <div class="flex-container">
           <div class="left-panel">

@@ -96,6 +96,9 @@ body {
   align-content: center;
   align-items: center; }
 
+.search-fld {
+  width: 185px; }
+
 .fa-star,
 .fa-history {
   color: gold; }

@@ -11,13 +11,15 @@ class LocationSearch extends Component {
 
     bindAll(
       this,
-      "handleSubmit"
+      "handleSubmit",
+      "clickHandler"
     );
 
     this.host = document.createElement("div");
     this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
+    this.host.addEventListener("click", this.clickHandler);
   }
 
   handleSubmit(ev) {
@@ -33,13 +35,28 @@ class LocationSearch extends Component {
     }
   }
 
+  clickHandler(ev) {
+    if (ev.target.id === "add-favorite-btn") {
+      this.props.handleAddFavorite();
+    } else if (ev.target.id === "units-btn") {
+      this.props.handleSwitchUnits();
+    }
+  }
+
   render() {
     const { city } = this.props;
 
     return `
       <form class="flex-container">
         <div>
-          <input required class="btn" name="city" type="text" placeholder="City name" value="${city}">
+          <button 
+            class="btn btn-active" 
+            id="add-favorite-btn" 
+            title="Adds city to favorites" 
+            aria-label="Add favorite location">
+            <i class="fa fa-star" aria-hidden="true"></i>
+          </button>
+          <input required class="btn search-fld" name="city" type="text" placeholder="City name" value="${city}">
           <button class="btn btn-active" 
             type="submit"
             title="Searches location" 

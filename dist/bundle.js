@@ -317,7 +317,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
     Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(
       this, 
-      "eventHandler",
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
@@ -330,15 +329,15 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     this.locationSearch = new __WEBPACK_IMPORTED_MODULE_6__components_LocationSearch__["a" /* default */]({
       city: this.state.city,
       onSubmit: this.onSearchSubmit,
-      onSwitch: this.onSwitchUnits
+      handleAddFavorite: this.onAddFavorite,
+      handleSwitchUnits: this.onSwitchUnits
     });
     this.favorites = new __WEBPACK_IMPORTED_MODULE_7__components_Favorites__["a" /* default */]({});
     this.history = new __WEBPACK_IMPORTED_MODULE_8__components_History__["a" /* default */]({});
     this.todayForecast = new __WEBPACK_IMPORTED_MODULE_9__components_TodayForecast__["a" /* default */]({
       city: this.state.city,
       forecast: this.state.todayForecast,
-      isMetric: this.isMetric,
-      onAddFavorite: this.handleAddFavorite
+      isMetric: this.isMetric
     });
     this.otherDaysForecast = new __WEBPACK_IMPORTED_MODULE_10__components_OtherDaysForecast__["a" /* default */]({
       forecast: this.state.otherDaysForecast,
@@ -348,8 +347,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     if (this.state.city !== "") {
       this.onSearchSubmit(this.state.city);
     }
-
-    this.host.addEventListener("click", this.eventHandler);
   }
 
   onSearchSubmit(city) {
@@ -361,15 +358,6 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         hasError: false
       });
     });
-  }
-
-  eventHandler(ev) {
-    if (ev.target.id === "units-btn") {
-      this.onSwitchUnits();
-    }
-    else if (ev.target.id === "add-favorite-btn") {
-      this.onAddFavorite();
-    }
   }
 
   onSwitchUnits() {
@@ -444,7 +432,8 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       this.locationSearch.update({
         city,
         onSubmit: this.onSearchSubmit,
-        onSwitch: this.onSwitchUnits
+        handleAddFavorite: this.onAddFavorite,
+        handleSwitchUnits: this.onSwitchUnits
       }),
       this.favorites.update({ list: favoritesList }),
       this.history.update({ list: historyList }),
@@ -453,8 +442,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
         : this.todayForecast.update({
             city,
             forecast: todayForecast,
-            isMetric,
-            onAddFavorite: this.handleAddFavorite
+            isMetric
           }),
       !otherDaysForecast
         ? ""
@@ -692,13 +680,15 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(
       this,
-      "handleSubmit"
+      "handleSubmit",
+      "clickHandler"
     );
 
     this.host = document.createElement("div");
     this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
+    this.host.addEventListener("click", this.clickHandler);
   }
 
   handleSubmit(ev) {
@@ -714,13 +704,28 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     }
   }
 
+  clickHandler(ev) {
+    if (ev.target.id === "add-favorite-btn") {
+      this.props.handleAddFavorite();
+    } else if (ev.target.id === "units-btn") {
+      this.props.handleSwitchUnits();
+    }
+  }
+
   render() {
     const { city } = this.props;
 
     return `
       <form class="flex-container">
         <div>
-          <input required class="btn" name="city" type="text" placeholder="City name" value="${city}">
+          <button 
+            class="btn btn-active" 
+            id="add-favorite-btn" 
+            title="Adds city to favorites" 
+            aria-label="Add favorite location">
+            <i class="fa fa-star" aria-hidden="true"></i>
+          </button>
+          <input required class="btn search-fld" name="city" type="text" placeholder="City name" value="${city}">
           <button class="btn btn-active" 
             type="submit"
             title="Searches location" 
@@ -850,12 +855,6 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
 
     return `
       <div class="main-panel">
-        <button class="btn btn-active" 
-          id="add-favorite-btn" 
-          title="Adds city to favorites" 
-          aria-label="Add favorite location">
-          <i class="fa fa-star" aria-hidden="true"></i>
-        </button>
         <h1 class="city-name">${city}</h1>
         <div class="flex-container">
           <div class="left-panel">

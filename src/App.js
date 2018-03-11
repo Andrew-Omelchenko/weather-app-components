@@ -32,7 +32,6 @@ class App extends Component {
 
     bindAll(
       this, 
-      "eventHandler",
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
@@ -45,15 +44,15 @@ class App extends Component {
     this.locationSearch = new LocationSearch({
       city: this.state.city,
       onSubmit: this.onSearchSubmit,
-      onSwitch: this.onSwitchUnits
+      handleAddFavorite: this.onAddFavorite,
+      handleSwitchUnits: this.onSwitchUnits
     });
     this.favorites = new Favorites({});
     this.history = new History({});
     this.todayForecast = new TodayForecast({
       city: this.state.city,
       forecast: this.state.todayForecast,
-      isMetric: this.isMetric,
-      onAddFavorite: this.handleAddFavorite
+      isMetric: this.isMetric
     });
     this.otherDaysForecast = new OtherDaysForecast({
       forecast: this.state.otherDaysForecast,
@@ -63,8 +62,6 @@ class App extends Component {
     if (this.state.city !== "") {
       this.onSearchSubmit(this.state.city);
     }
-
-    this.host.addEventListener("click", this.eventHandler);
   }
 
   onSearchSubmit(city) {
@@ -76,15 +73,6 @@ class App extends Component {
         hasError: false
       });
     });
-  }
-
-  eventHandler(ev) {
-    if (ev.target.id === "units-btn") {
-      this.onSwitchUnits();
-    }
-    else if (ev.target.id === "add-favorite-btn") {
-      this.onAddFavorite();
-    }
   }
 
   onSwitchUnits() {
@@ -159,7 +147,8 @@ class App extends Component {
       this.locationSearch.update({
         city,
         onSubmit: this.onSearchSubmit,
-        onSwitch: this.onSwitchUnits
+        handleAddFavorite: this.onAddFavorite,
+        handleSwitchUnits: this.onSwitchUnits
       }),
       this.favorites.update({ list: favoritesList }),
       this.history.update({ list: historyList }),
@@ -168,8 +157,7 @@ class App extends Component {
         : this.todayForecast.update({
             city,
             forecast: todayForecast,
-            isMetric,
-            onAddFavorite: this.handleAddFavorite
+            isMetric
           }),
       !otherDaysForecast
         ? ""
