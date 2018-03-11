@@ -15,13 +15,29 @@ export function isValidCityName(name) {
 };
 
 /**
+ * Checks if the element is in the array
+ * @param {Array} arr - the array
+ * @param {string} element - the element
+ * @returns {Boolean}
+ */
+export function isArrayElement(arr, element) {
+  // is there the same element?
+  for (let elem of arr) {
+    if (elem === element) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
  * Extracts base url from full url string
  * @param {string} urlString - current full url string
  * @returns {string} base url
  */
 export function extractBase(urlString) {
   return urlString.split("?").slice(0, -1);
-}
+};
 
 /**
  * Extracts location from full url string
@@ -31,7 +47,7 @@ export function extractBase(urlString) {
 export function parseLocation(urlString) {
   const parsed = new URL(urlString);
   return parsed.searchParams.get("city");
-}
+};
 
 /**
  * Converts temperature value from degrees Celsius to degrees Fahrenheit
@@ -40,7 +56,7 @@ export function parseLocation(urlString) {
  */
 export function toFahrenheit(value) {
   return Math.round(value * 1.8 + 32);
-}
+};
 
 /**
  * Converts velocity value from meters per second to miles per hour
@@ -49,4 +65,4 @@ export function toFahrenheit(value) {
  */
 export function toMph(value) {
   return Math.round(value * 2.25);
-}
+};

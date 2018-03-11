@@ -36,8 +36,8 @@ class LocationSearch extends Component {
   }
 
   clickHandler(ev) {
-    if (ev.target.id === "add-favorite-btn") {
-      this.props.handleAddFavorite();
+    if (ev.target.id === "favorite-checkbox") {
+      this.props.handleFavorite(ev.target.checked);
     } else if (ev.target.id === "units-btn") {
       this.props.handleSwitchUnits();
     }
@@ -48,14 +48,16 @@ class LocationSearch extends Component {
 
     return `
       <form class="flex-container">
-        <div>
-          <button 
-            class="btn btn-active" 
-            id="add-favorite-btn" 
-            title="Adds city to favorites" 
-            aria-label="Add favorite location">
-            <i class="fa fa-star" aria-hidden="true"></i>
-          </button>
+        <label class="checkbox-container">
+          <input ${this.props.isFavorite ? "checked" : ""}
+            class="checkbox" 
+            id="favorite-checkbox"
+            type="checkbox" 
+            title="Adds/removes favorite" 
+            aria-label="Add/remove favorite location">
+          <span class="checkmark"></span>
+        </label>
+        <div>            
           <input required class="btn search-fld" name="city" type="text" placeholder="City name" value="${city}">
           <button class="btn btn-active" 
             type="submit"

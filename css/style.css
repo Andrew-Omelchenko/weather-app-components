@@ -102,3 +102,59 @@ body {
 .fa-star,
 .fa-history {
   color: gold; }
+
+/* Customize the label (the container) */
+.checkbox-container {
+  display: block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 16pt;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Hide the browser's default checkbox */
+  /* Create a custom checkbox */
+  /* On mouse-over, add a grey background color */
+  /* When the checkbox is checked, add a blue background */
+  /* Show the checkmark when checked */ }
+  .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer; }
+  .checkbox-container .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    background-color: maroon;
+    border-radius: 5px;
+    border: 1px solid gray;
+    /* Create the checkmark/indicator (hidden when not checked) */ }
+    .checkbox-container .checkmark:after {
+      font-family: "FontAwesome";
+      content: "\f089";
+      color: lightblue;
+      display: block;
+      position: absolute;
+      top: 3px;
+      left: 5px;
+      font-size: 16pt;
+      z-index: 1; }
+  .checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc; }
+  .checkbox-container input:checked ~ .checkmark {
+    background-color: skyblue; }
+  .checkbox-container input:checked ~ .checkmark:after {
+    font-family: "FontAwesome";
+    content: "\f005";
+    color: gold;
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    font-size: 16pt;
+    z-index: 1; }

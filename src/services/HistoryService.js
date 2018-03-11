@@ -20,7 +20,7 @@ class HistoryService extends ListService {
   add(item) {
     // check first
     if (item === this._data[0]) {
-      console.log("Such last entry already exists.");
+      // console.log("Such last entry already exists.");
       return false;
     }
     // remove duplicates

@@ -68,11 +68,12 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = isValidCityName;
+/* harmony export (immutable) */ __webpack_exports__["d"] = isValidCityName;
+/* harmony export (immutable) */ __webpack_exports__["c"] = isArrayElement;
 /* harmony export (immutable) */ __webpack_exports__["b"] = extractBase;
-/* harmony export (immutable) */ __webpack_exports__["d"] = parseLocation;
-/* harmony export (immutable) */ __webpack_exports__["e"] = toFahrenheit;
-/* harmony export (immutable) */ __webpack_exports__["f"] = toMph;
+/* harmony export (immutable) */ __webpack_exports__["e"] = parseLocation;
+/* harmony export (immutable) */ __webpack_exports__["f"] = toFahrenheit;
+/* harmony export (immutable) */ __webpack_exports__["g"] = toMph;
 const bindAll = (context, ...names) => {
   names.forEach(name => {
     if (typeof context[name] === "function") {
@@ -92,13 +93,29 @@ function isValidCityName(name) {
 };
 
 /**
+ * Checks if the element is in the array
+ * @param {Array} arr - the array
+ * @param {string} element - the element
+ * @returns {Boolean}
+ */
+function isArrayElement(arr, element) {
+  // is there the same element?
+  for (let elem of arr) {
+    if (elem === element) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
  * Extracts base url from full url string
  * @param {string} urlString - current full url string
  * @returns {string} base url
  */
 function extractBase(urlString) {
   return urlString.split("?").slice(0, -1);
-}
+};
 
 /**
  * Extracts location from full url string
@@ -108,7 +125,7 @@ function extractBase(urlString) {
 function parseLocation(urlString) {
   const parsed = new URL(urlString);
   return parsed.searchParams.get("city");
-}
+};
 
 /**
  * Converts temperature value from degrees Celsius to degrees Fahrenheit
@@ -117,7 +134,7 @@ function parseLocation(urlString) {
  */
 function toFahrenheit(value) {
   return Math.round(value * 1.8 + 32);
-}
+};
 
 /**
  * Converts velocity value from meters per second to miles per hour
@@ -126,7 +143,7 @@ function toFahrenheit(value) {
  */
 function toMph(value) {
   return Math.round(value * 2.25);
-}
+};
 
 
 /***/ }),
@@ -233,8 +250,8 @@ class ListService {
     this._storageService = storageSvc;
     this._name = name;
     this._data = this._storageService.read(this._name);
-    console.log(`ListService constructor. Getting ${this._name} data.`);
-    console.log(this._data);
+    // console.log(`ListService constructor. Getting ${this._name} data.`);
+    // console.log(this._data);
     if (this._data == null) {
       this._data = [];
     }
@@ -245,8 +262,8 @@ class ListService {
    * @returns {[]} - current data
    */
   get data() {
-    console.log(`ListService. Getting ${this._name} data.`);
-    console.log(this._data);
+    // console.log(`ListService. Getting ${this._name} data.`);
+    // console.log(this._data);
     return this._data;
   }
 }
@@ -306,7 +323,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
     // initialize state object
     this.state = {
-      city: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* parseLocation */])(window.location.href) || "",
+      city: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* parseLocation */])(window.location.href) || "",
       favoritesList: this.favoritesService.data,
       historyList: this.historyService.data,
       todayForecast: null,
@@ -320,7 +337,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
-      "onAddFavorite"
+      "onFavorite"
     );
 
     this.host = host;
@@ -329,8 +346,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     this.locationSearch = new __WEBPACK_IMPORTED_MODULE_6__components_LocationSearch__["a" /* default */]({
       city: this.state.city,
       onSubmit: this.onSearchSubmit,
-      handleAddFavorite: this.onAddFavorite,
-      handleSwitchUnits: this.onSwitchUnits
+      handleFavorite: this.onFavorite,
+      handleSwitchUnits: this.onSwitchUnits,
+      isFavorite: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isArrayElement */])(this.state.favoritesList, this.state.city)
     });
     this.favorites = new __WEBPACK_IMPORTED_MODULE_7__components_Favorites__["a" /* default */]({});
     this.history = new __WEBPACK_IMPORTED_MODULE_8__components_History__["a" /* default */]({});
@@ -369,8 +387,12 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     this.state.hasError = true;
   }
 
-  onAddFavorite() {
-    this.favoritesService.add(this.state.city);
+  onFavorite(isChecked) {
+    if (isChecked) {
+      this.favoritesService.add(this.state.city);
+    } else {
+      this.favoritesService.remove(this.state.city);
+    }
     this.state.favoritesList = this.favoritesService.data;
     this.favorites.update({ list: this.state.favoritesList });
   }
@@ -432,8 +454,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
       this.locationSearch.update({
         city,
         onSubmit: this.onSearchSubmit,
-        handleAddFavorite: this.onAddFavorite,
-        handleSwitchUnits: this.onSwitchUnits
+        handleFavorite: this.onFavorite,
+        handleSwitchUnits: this.onSwitchUnits,
+        isFavorite: Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isArrayElement */])(this.state.favoritesList, this.state.city)
       }),
       this.favorites.update({ list: favoritesList }),
       this.history.update({ list: historyList }),
@@ -584,8 +607,8 @@ class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /*
   add(item) {
     // is there the same element?
     for (let elem of this._data) {
-      if (elem == item) {
-        console.log("Item is already present.")
+      if (elem === item) {
+        // console.log("Item is already present.")
         return false;
       }
     }
@@ -598,6 +621,29 @@ class FavoritesService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /*
     this._data.sort();
     this._storageService.write(this._data, "favorites");
     return true;
+  }
+  /**
+   * Removes item to the favorites list
+   * @param {string} item - item to add to the list
+   * @returns {boolean} true, if item was removed, false - otherwise
+   */
+  remove(item) {
+    // remove item
+    if (this._data) {
+      let wasDeleted = false;
+      const tmp = [];
+      for (let elem of this._data) {
+        if (elem !== item) {
+          tmp.push(elem);
+        } else {
+          wasDeleted = true;
+        }
+      }
+      this._data = tmp;
+      this._storageService.write(this._data, "favorites");
+      return wasDeleted;
+    }
+    return false;
   }
 }
 
@@ -633,7 +679,7 @@ class HistoryService extends __WEBPACK_IMPORTED_MODULE_1__ListService__["a" /* d
   add(item) {
     // check first
     if (item === this._data[0]) {
-      console.log("Such last entry already exists.");
+      // console.log("Such last entry already exists.");
       return false;
     }
     // remove duplicates
@@ -696,7 +742,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isValidCityName */])(city)) {
+    if (!Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["d" /* isValidCityName */])(city)) {
       this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
@@ -705,8 +751,8 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
   }
 
   clickHandler(ev) {
-    if (ev.target.id === "add-favorite-btn") {
-      this.props.handleAddFavorite();
+    if (ev.target.id === "favorite-checkbox") {
+      this.props.handleFavorite(ev.target.checked);
     } else if (ev.target.id === "units-btn") {
       this.props.handleSwitchUnits();
     }
@@ -717,14 +763,16 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     return `
       <form class="flex-container">
-        <div>
-          <button 
-            class="btn btn-active" 
-            id="add-favorite-btn" 
-            title="Adds city to favorites" 
-            aria-label="Add favorite location">
-            <i class="fa fa-star" aria-hidden="true"></i>
-          </button>
+        <label class="checkbox-container">
+          <input ${this.props.isFavorite ? "checked" : ""}
+            class="checkbox" 
+            id="favorite-checkbox"
+            type="checkbox" 
+            title="Adds/removes favorite" 
+            aria-label="Add/remove favorite location">
+          <span class="checkmark"></span>
+        </label>
+        <div>            
           <input required class="btn search-fld" name="city" type="text" placeholder="City name" value="${city}">
           <button class="btn btn-active" 
             type="submit"
@@ -861,13 +909,13 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
             <h2>${__WEBPACK_IMPORTED_MODULE_1__utils_config__["a" /* DAY_OF_WEEK */][new Date(forecast.datetime).getDay()]}</h2>
             <h3 class="date">${forecast.datetime}</h3>
             <h1 class="temperature">t: ${Math.round(
-              isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.temp)
+              isMetric ? forecast.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toFahrenheit */])(forecast.temp)
               )}&deg;${tempUnits}</h1>
             <p class="min-temp">t.min: ${Math.round(
-              isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.min_temp)
+              isMetric ? forecast.min_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toFahrenheit */])(forecast.min_temp)
               )}&deg;${tempUnits}</p>
             <p class="max-temp">t.max: ${Math.round(
-              isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(forecast.max_temp)
+              isMetric ? forecast.max_temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toFahrenheit */])(forecast.max_temp)
               )}&deg;${tempUnits}</p>
           </div>
           <div class="right-panel">
@@ -879,7 +927,7 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
             <h3>${forecast.weather.description}</h3>
             <p>Humidity: ${forecast.rh}%</p>
             <p>Wind: ${
-              isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toMph */])(forecast.wind_spd)
+              isMetric ? forecast.wind_spd : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["g" /* toMph */])(forecast.wind_spd)
               }${velocityUnits} ${forecast.wind_cdir}</p>
           </div>
         </div>
@@ -930,7 +978,7 @@ class OtherDaysForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component
           </div>
           <h4>${item.weather.description}</h4>
           <h2>t: ${Math.round(
-            isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["e" /* toFahrenheit */])(item.temp)
+            isMetric ? item.temp : Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["f" /* toFahrenheit */])(item.temp)
           )}&deg;${tempUnits}</h2>
         </div>
       `

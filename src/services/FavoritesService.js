@@ -20,8 +20,8 @@ class FavoritesService extends ListService {
   add(item) {
     // is there the same element?
     for (let elem of this._data) {
-      if (elem == item) {
-        console.log("Item is already present.")
+      if (elem === item) {
+        // console.log("Item is already present.")
         return false;
       }
     }
@@ -34,6 +34,29 @@ class FavoritesService extends ListService {
     this._data.sort();
     this._storageService.write(this._data, "favorites");
     return true;
+  }
+  /**
+   * Removes item to the favorites list
+   * @param {string} item - item to add to the list
+   * @returns {boolean} true, if item was removed, false - otherwise
+   */
+  remove(item) {
+    // remove item
+    if (this._data) {
+      let wasDeleted = false;
+      const tmp = [];
+      for (let elem of this._data) {
+        if (elem !== item) {
+          tmp.push(elem);
+        } else {
+          wasDeleted = true;
+        }
+      }
+      this._data = tmp;
+      this._storageService.write(this._data, "favorites");
+      return wasDeleted;
+    }
+    return false;
   }
 }
 

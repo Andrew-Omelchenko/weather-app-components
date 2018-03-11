@@ -1,4 +1,4 @@
-import { bindAll, extractBase, parseLocation } from "./utils/helper";
+import { bindAll, extractBase, parseLocation, isArrayElement } from "./utils/helper";
 import Component from "./framework/Component";
 import getForecast from "./utils/api";
 import StorageService from "./services/StorageService";
@@ -35,7 +35,7 @@ class App extends Component {
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
-      "onAddFavorite"
+      "onFavorite"
     );
 
     this.host = host;
@@ -44,8 +44,9 @@ class App extends Component {
     this.locationSearch = new LocationSearch({
       city: this.state.city,
       onSubmit: this.onSearchSubmit,
-      handleAddFavorite: this.onAddFavorite,
-      handleSwitchUnits: this.onSwitchUnits
+      handleFavorite: this.onFavorite,
+      handleSwitchUnits: this.onSwitchUnits,
+      isFavorite: isArrayElement(this.state.favoritesList, this.state.city)
     });
     this.favorites = new Favorites({});
     this.history = new History({});
@@ -84,8 +85,12 @@ class App extends Component {
     this.state.hasError = true;
   }
 
-  onAddFavorite() {
-    this.favoritesService.add(this.state.city);
+  onFavorite(isChecked) {
+    if (isChecked) {
+      this.favoritesService.add(this.state.city);
+    } else {
+      this.favoritesService.remove(this.state.city);
+    }
     this.state.favoritesList = this.favoritesService.data;
     this.favorites.update({ list: this.state.favoritesList });
   }
@@ -147,8 +152,9 @@ class App extends Component {
       this.locationSearch.update({
         city,
         onSubmit: this.onSearchSubmit,
-        handleAddFavorite: this.onAddFavorite,
-        handleSwitchUnits: this.onSwitchUnits
+        handleFavorite: this.onFavorite,
+        handleSwitchUnits: this.onSwitchUnits,
+        isFavorite: isArrayElement(this.state.favoritesList, this.state.city)
       }),
       this.favorites.update({ list: favoritesList }),
       this.history.update({ list: historyList }),

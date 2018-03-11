@@ -10,8 +10,8 @@ class ListService {
     this._storageService = storageSvc;
     this._name = name;
     this._data = this._storageService.read(this._name);
-    console.log(`ListService constructor. Getting ${this._name} data.`);
-    console.log(this._data);
+    // console.log(`ListService constructor. Getting ${this._name} data.`);
+    // console.log(this._data);
     if (this._data == null) {
       this._data = [];
     }
@@ -22,8 +22,8 @@ class ListService {
    * @returns {[]} - current data
    */
   get data() {
-    console.log(`ListService. Getting ${this._name} data.`);
-    console.log(this._data);
+    // console.log(`ListService. Getting ${this._name} data.`);
+    // console.log(this._data);
     return this._data;
   }
 }
