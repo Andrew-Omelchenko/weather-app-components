@@ -317,10 +317,11 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
 
     Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(
       this, 
+      "eventHandler",
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
-      "handleAddFavorite"
+      "onAddFavorite"
     );
 
     this.host = host;
@@ -347,6 +348,8 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     if (this.state.city !== "") {
       this.onSearchSubmit(this.state.city);
     }
+
+    this.host.addEventListener("click", this.eventHandler);
   }
 
   onSearchSubmit(city) {
@@ -360,6 +363,15 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     });
   }
 
+  eventHandler(ev) {
+    if (ev.target.id === "units-btn") {
+      this.onSwitchUnits();
+    }
+    else if (ev.target.id === "add-favorite-btn") {
+      this.onAddFavorite();
+    }
+  }
+
   onSwitchUnits() {
     this.state.isMetric = !this.state.isMetric;
     this.render();
@@ -369,8 +381,10 @@ class App extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__["a" /* defa
     this.state.hasError = true;
   }
 
-  handleAddFavorite() {
-    console.log("Inside handleAddFavorite");
+  onAddFavorite() {
+    this.favoritesService.add(this.state.city);
+    this.state.favoritesList = this.favoritesService.data;
+    this.favorites.update({ list: this.state.favoritesList });
   }
 
   computeNextState(data) {
@@ -676,13 +690,15 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
       isValid: true
     };
 
-    __WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */](this, "handleSubmit", "handleClick");
+    Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(
+      this,
+      "handleSubmit"
+    );
 
     this.host = document.createElement("div");
     this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
-    this.host.addEventListener("click", this.handleClick);
   }
 
   handleSubmit(ev) {
@@ -690,7 +706,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isValidCityName */](city)) {
+    if (!Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["c" /* isValidCityName */])(city)) {
       this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
@@ -698,14 +714,7 @@ class LocationSearch extends __WEBPACK_IMPORTED_MODULE_1__framework_Component__[
     }
   }
 
-  handleClick(ev) {
-    if (ev.target === document.getElementById("units-btn")) {
-      this.props.onSwitch();
-    }
-  }
-
   render() {
-    const { isValid } = this.state;
     const { city } = this.props;
 
     return `
@@ -829,19 +838,8 @@ class TodayForecast extends __WEBPACK_IMPORTED_MODULE_2__framework_Component__["
   constructor(props) {
     super(props);
 
-    Object(__WEBPACK_IMPORTED_MODULE_0__utils_helper__["a" /* bindAll */])(this, "handleClick");
-
     this.host = document.createElement("div");
     this.host.classList.add("container");
-
-    this.host.addEventListener("click", this.handleClick);
-  }
-
-  handleClick(ev) {
-    if (ev.target === document.getElementById("add-favorite-btn")) {
-      console.log("Inside handleClick add-favorite-btn");
-      this.props.onAddFavorite();
-    }
   }
 
   render() {

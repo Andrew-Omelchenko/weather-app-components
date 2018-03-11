@@ -1,4 +1,4 @@
-import * as helper from "../utils/helper";
+import { bindAll, isValidCityName } from "../utils/helper";
 import Component from "../framework/Component";
 
 class LocationSearch extends Component {
@@ -9,13 +9,15 @@ class LocationSearch extends Component {
       isValid: true
     };
 
-    helper.bindAll(this, "handleSubmit", "handleClick");
+    bindAll(
+      this,
+      "handleSubmit"
+    );
 
     this.host = document.createElement("div");
     this.host.classList.add("container");
 
     this.host.addEventListener("submit", this.handleSubmit);
-    this.host.addEventListener("click", this.handleClick);
   }
 
   handleSubmit(ev) {
@@ -23,7 +25,7 @@ class LocationSearch extends Component {
 
     const city = ev.target.elements.city.value.trim();
 
-    if (!helper.isValidCityName(city)) {
+    if (!isValidCityName(city)) {
       this.state.isValid = false;
     } else {
       this.props.onSubmit(city);
@@ -31,14 +33,7 @@ class LocationSearch extends Component {
     }
   }
 
-  handleClick(ev) {
-    if (ev.target === document.getElementById("units-btn")) {
-      this.props.onSwitch();
-    }
-  }
-
   render() {
-    const { isValid } = this.state;
     const { city } = this.props;
 
     return `

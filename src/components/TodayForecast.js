@@ -6,19 +6,8 @@ class TodayForecast extends Component {
   constructor(props) {
     super(props);
 
-    bindAll(this, "handleClick");
-
     this.host = document.createElement("div");
     this.host.classList.add("container");
-
-    this.host.addEventListener("click", this.handleClick);
-  }
-
-  handleClick(ev) {
-    if (ev.target === document.getElementById("add-favorite-btn")) {
-      console.log("Inside handleClick add-favorite-btn");
-      this.props.onAddFavorite();
-    }
   }
 
   render() {

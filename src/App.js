@@ -32,10 +32,11 @@ class App extends Component {
 
     bindAll(
       this, 
+      "eventHandler",
       "onSearchSubmit", 
       "onSwitchUnits", 
       "handleError", 
-      "handleAddFavorite"
+      "onAddFavorite"
     );
 
     this.host = host;
@@ -62,6 +63,8 @@ class App extends Component {
     if (this.state.city !== "") {
       this.onSearchSubmit(this.state.city);
     }
+
+    this.host.addEventListener("click", this.eventHandler);
   }
 
   onSearchSubmit(city) {
@@ -75,6 +78,15 @@ class App extends Component {
     });
   }
 
+  eventHandler(ev) {
+    if (ev.target.id === "units-btn") {
+      this.onSwitchUnits();
+    }
+    else if (ev.target.id === "add-favorite-btn") {
+      this.onAddFavorite();
+    }
+  }
+
   onSwitchUnits() {
     this.state.isMetric = !this.state.isMetric;
     this.render();
@@ -84,8 +96,10 @@ class App extends Component {
     this.state.hasError = true;
   }
 
-  handleAddFavorite() {
-    console.log("Inside handleAddFavorite");
+  onAddFavorite() {
+    this.favoritesService.add(this.state.city);
+    this.state.favoritesList = this.favoritesService.data;
+    this.favorites.update({ list: this.state.favoritesList });
   }
 
   computeNextState(data) {
